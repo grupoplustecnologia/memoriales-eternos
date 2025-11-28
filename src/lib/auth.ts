@@ -12,7 +12,7 @@ export interface User {
   createdAt: string;
   subscriptionTier: 'huella-eterna' | 'cielo-estrellas' | 'santuario-premium';
   profilePicture?: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'ADMIN';
   completedMissions?: string[];
 }
 

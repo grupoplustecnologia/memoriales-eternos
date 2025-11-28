@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     const authResult = await verifySessionToken(token);
-    if (!authResult.valid || authResult.user?.role !== 'admin') {
+    if (!authResult.valid || authResult.user?.role !== 'ADMIN') {
       console.log('❌ Not admin:', { valid: authResult.valid, role: authResult.user?.role });
       return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
     }
