@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Only admin can update profiles
-    if (authResult.user.role !== 'admin') {
+    if (authResult.user.role !== 'ADMIN') {
       return NextResponse.json(
         { success: false, error: 'Only admin can update profiles' },
         { status: 403 }

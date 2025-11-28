@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     }
     
     // Check if user is admin
-    if (authResult.user?.role !== 'admin') {
+    if (authResult.user?.role !== 'ADMIN') {
       console.log('User role:', authResult.user?.role, 'Expected: admin');
       return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
     }

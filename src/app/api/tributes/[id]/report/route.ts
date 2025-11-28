@@ -70,7 +70,7 @@ export async function GET(
     }
 
     const authResult = await verifySessionToken(token);
-    if (!authResult.valid || !authResult.user || authResult.user.role !== 'admin') {
+    if (!authResult.valid || !authResult.user || authResult.user.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Unauthorized - Admin only' },
         { status: 401 }

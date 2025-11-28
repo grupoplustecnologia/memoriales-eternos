@@ -16,7 +16,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const verification = await verifySessionToken(token);
-    if (!verification.valid || verification.user?.role !== 'admin') {
+    if (!verification.valid || verification.user?.role !== 'ADMIN') {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
         { status: 403 }

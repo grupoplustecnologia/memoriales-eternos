@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     }
 
     const authResult = await verifySessionToken(token);
-    if (!authResult.valid || authResult.user?.role !== 'admin') {
+    if (!authResult.valid || authResult.user?.role !== 'ADMIN') {
       return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
     }
 
@@ -43,7 +43,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     const authResult = await verifySessionToken(token);
-    if (!authResult.valid || authResult.user?.role !== 'admin') {
+    if (!authResult.valid || authResult.user?.role !== 'ADMIN') {
       return NextResponse.json({ success: false, error: 'Admin access required' }, { status: 403 });
     }
 
