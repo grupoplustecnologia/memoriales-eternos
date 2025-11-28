@@ -19,8 +19,23 @@ export async function POST(request: NextRequest) {
     
     console.log(`🔑 Login result:`, result);
 
+    if (result.success) {
+      // Devolver en formato consistente
+      return NextResponse.json({
+        success: true,
+        message: result.message,
+        data: {
+          user: result.user,
+          token: result.session?.token,
+          session: result.session
+        }
+      }, {
+        status: 200
+      });
+    }
+
     return NextResponse.json(result, {
-      status: result.success ? 200 : 401
+      status: 401
     });
   } catch (error) {
     console.error('Login error:', error);

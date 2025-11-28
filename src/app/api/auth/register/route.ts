@@ -22,8 +22,23 @@ export async function POST(request: NextRequest) {
 
     const result = await registerUser(email, password, name);
 
+    if (result.success) {
+      // Devolver en formato consistente
+      return NextResponse.json({
+        success: true,
+        message: result.message,
+        data: {
+          user: result.user,
+          token: result.session?.token,
+          session: result.session
+        }
+      }, {
+        status: 201
+      });
+    }
+
     return NextResponse.json(result, {
-      status: result.success ? 201 : 400
+      status: 400
     });
   } catch (error) {
     console.error('Register error:', error);
