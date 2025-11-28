@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifySessionToken } from '@/lib/auth';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import crypto from 'crypto';
-
-const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads', 'photos');
 
 export async function POST(req: NextRequest) {
   try {
@@ -55,32 +50,17 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    // Generate unique filename
-    const timestamp = Date.now();
-    const random = crypto.randomBytes(8).toString('hex');
-    const ext = file.name.split('.').pop() || 'jpg';
-    const filename = `photo_${timestamp}_${random}.${ext}`;
-
-    // Ensure upload directory exists
-    try {
-      await mkdir(UPLOAD_DIR, { recursive: true });
-    } catch (err) {
-      // Directory might already exist
-    }
-
-    // Write file
-    const filepath = join(UPLOAD_DIR, filename);
+    // Convert file to base64
     const bytes = await file.arrayBuffer();
-    await writeFile(filepath, Buffer.from(bytes));
+    const buffer = Buffer.from(bytes);
+    const base64 = buffer.toString('base64');
+    const dataUrl = `data:${file.type};base64,${base64}`;
 
-    // Return the URL path
-    const photoUrl = `/uploads/photos/${filename}`;
-
-    console.log(`✅ Photo uploaded: ${photoUrl}`);
+    console.log(`✅ Photo converted to base64: ${dataUrl.substring(0, 50)}...`);
 
     return NextResponse.json({
       success: true,
-      photoUrl,
+      photoUrl: dataUrl,
       message: 'Foto cargada exitosamente'
     });
   } catch (error) {
