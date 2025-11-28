@@ -125,7 +125,7 @@ export async function createProfile(
       where: { slug: { startsWith: baseSlug } },
       select: { slug: true }
     });
-    const existingSlugsArray = existingSlugs.map(p => p.slug);
+    const existingSlugsArray = existingSlugs.map((p: any) => p.slug);
     const uniqueSlug = generateUniqueSlug(baseSlug, existingSlugsArray);
 
     const profile = await prisma.animalProfile.create({

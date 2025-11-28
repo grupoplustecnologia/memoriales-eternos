@@ -98,7 +98,7 @@ export async function getPopularTags(limit: number = 10) {
     take: limit,
   });
 
-  return tags.map((tag) => ({
+  return tags.map((tag: any) => ({
     ...tag,
     count: tag._count.profiles,
   }));

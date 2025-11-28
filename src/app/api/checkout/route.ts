@@ -3,6 +3,7 @@ import { stripe, PLANS } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 import { verifyAuth } from '@/lib/auth';
 
+// Stripe checkout session endpoint
 export async function POST(request: NextRequest) {
   try {
     // Obtener el token del usuario

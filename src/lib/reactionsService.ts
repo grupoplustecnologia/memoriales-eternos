@@ -73,7 +73,7 @@ export async function getReactionCounts(profileId: string) {
     _count: true,
   });
 
-  return reactions.map((r) => ({
+  return reactions.map((r: any) => ({
     emoji: r.emoji,
     count: r._count,
   }));
@@ -131,7 +131,7 @@ export async function getUserReactionsOnProfile(
     select: { emoji: true },
   });
 
-  return reactions.map((r) => r.emoji);
+  return reactions.map((r: any) => r.emoji);
 }
 
 export const REACTION_EMOJIS = ALLOWED_EMOJIS;

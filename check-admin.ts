@@ -21,7 +21,7 @@ async function checkAdmin() {
     if (admins.length === 0) {
       console.log('❌ No hay usuarios admin en la base de datos');
     } else {
-      admins.forEach((admin, i) => {
+      admins.forEach((admin: any, i: number) => {
         console.log(`${i + 1}. Email: ${admin.email}`);
         console.log(`   Nombre: ${admin.name}`);
         console.log(`   Role: ${admin.role}`);
@@ -43,7 +43,7 @@ async function checkAdmin() {
 
     console.log(`\n📊 TOTAL DE USUARIOS EN BD: ${allUsers.length}\n`);
     console.log('Primeros 10 usuarios:');
-    allUsers.slice(0, 10).forEach((user, i) => {
+    allUsers.slice(0, 10).forEach((user: any, i: number) => {
       console.log(`${i + 1}. ${user.email} (${user.role})`);
     });
 
