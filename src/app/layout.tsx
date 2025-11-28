@@ -22,6 +22,16 @@ export const metadata: Metadata = {
   title: "Forever Pet Friend - Monumentos Virtuales para tus Mascotas Queridas",
   description: "Crea memorials virtuales eternos para tus mascotas. Comparte historias, tributos y recuerdos en una comunidad global de amantes de animales.",
   keywords: "memorial mascotas, memorial perros, memorial gatos, monumentos virtuales, mascotas fallecidas",
+  viewport: "width=device-width, initial-scale=1.0, viewport-fit=cover",
+  themeColor: "#8B7355",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Forever Pet Friend",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
     title: "Forever Pet Friend - Monumentos Virtuales para Mascotas",
     description: "Crea y comparte memorials eternos para tus mascotas queridas",
