@@ -1,12 +1,18 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
-import MapboxMap from '@/components/MapboxMap';
+import { useState, useMemo, useRef, useEffect, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import type { AnimalProfile } from '@/types';
 import Link from 'next/link';
+
+// Dynamic import of MapboxMap with ssr: false
+const MapboxMap = dynamic(() => import('@/components/MapboxMap'), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">Cargando mapa...</div>
+});
 
 export default function MapPage() {
   const [profiles, setProfiles] = useState<AnimalProfile[]>([]);
