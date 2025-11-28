@@ -22,6 +22,11 @@ model User {
   
   // Suscripción y plan
   subscriptionTier  String    @default("huella-eterna")
+  subscriptionId    String?
+  stripeCustomerId  String?   @unique
+  planType          String    @default("free")
+  subscriptionStatus String   @default("inactive")
+  subscriptionEndDate DateTime?
   role              String    @default("user")
   
   // Relaciones

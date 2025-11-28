@@ -1,13 +1,80 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PLANS } from '@/types/index';
+import { PLANS } from '@/lib/stripe';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { getAuthToken } from '@/lib/auth-client';
 
 export default function PricingPage() {
-  const plans = Object.values(PLANS);
+  const router = useRouter();
+  const [loading, setLoading] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Obtener datos del usuario actual
+    const token = getAuthToken();
+    if (token) {
+      fetch('/api/subscription-status', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setUser(data.data.user);
+          }
+        })
+        .catch((err) => console.error('Error:', err));
+    }
+  }, []);
+
+  const handleSelectPlan = async (planId: string) => {
+    const token = getAuthToken();
+
+    if (!token) {
+      // Redirigir a login
+      router.push(`/auth/login?redirect=/pricing&plan=${planId}`);
+      return;
+    }
+
+    setLoading(planId);
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ planId }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        if (data.sessionUrl) {
+          // Redirigir a Stripe Checkout
+          window.location.href = data.sessionUrl;
+        } else if (data.planType === 'free') {
+          // Plan gratuito activado
+          alert('¡Plan activado exitosamente!');
+          router.refresh();
+        }
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo procesar el pago'));
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al procesar el pago');
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const planArray = Object.values(PLANS);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-nature-50 to-sky-50">
@@ -21,33 +88,32 @@ export default function PricingPage() {
             Elige el plan perfecto para crear un memorial eterno.
             Cada plan es una forma de expresar tu amor.
           </p>
+          {user && (
+            <p className="text-sm text-nature-500 mt-4">
+              Plan actual: <span className="font-semibold">{user.planType}</span>
+            </p>
+          )}
         </div>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-12">
-          {plans.map((plan, index) => (
+          {planArray.map((plan, index) => (
             <Card
               key={plan.id}
               className={`relative transition-all hover:shadow-xl ${
-                index === 2
-                  ? 'ring-2 ring-golden-400 md:scale-105 z-10'
-                  : ''
+                index === 2 ? 'ring-2 ring-golden-400 md:scale-105 z-10' : ''
               }`}
-              style={{
-                borderTop: `4px solid ${plan.color}`
-              }}
             >
               {index === 2 && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-gradient-to-r from-golden-400 to-yellow-400 text-white px-4 py-1">
-                    {plan.emoji} Recomendado
+                    👑 Recomendado
                   </Badge>
                 </div>
               )}
 
               <CardHeader className="text-center pb-2 pt-8">
-                <div className="text-5xl mb-2">{plan.emoji}</div>
-                <CardTitle className="text-2xl">{plan.emotionalName.split(' ').slice(1).join(' ')}</CardTitle>
+                <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription className="text-base mt-2">{plan.description}</CardDescription>
               </CardHeader>
 
@@ -55,9 +121,15 @@ export default function PricingPage() {
                 {/* Price */}
                 <div className="py-4 border-t border-b border-gray-200">
                   <div className="text-4xl font-bold text-gray-900">
-                    {plan.priceOneTime === 0 ? 'Gratuito' : `€${plan.priceOneTime}`}
+                    {plan.price === 0 ? (
+                      'Gratuito'
+                    ) : (
+                      <>
+                        {plan.priceDisplay}
+                        <span className="text-sm text-muted-foreground font-normal ml-2">Pago único</span>
+                      </>
+                    )}
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1">Pago único</p>
                 </div>
 
                 {/* Features */}
@@ -71,16 +143,22 @@ export default function PricingPage() {
                 </div>
 
                 {/* CTA Button */}
-                <Link href={`/auth/register?plan=${plan.id}`} className="w-full">
-                  <Button
-                    className="w-full text-white font-semibold"
-                    style={{
-                      backgroundColor: plan.color
-                    }}
-                  >
-                    {plan.id === 'huella-eterna' ? 'Plan Gratuito' : 'Elegir Plan'}
-                  </Button>
-                </Link>
+                <Button
+                  className="w-full text-white font-semibold"
+                  onClick={() => handleSelectPlan(plan.id)}
+                  disabled={loading === plan.id}
+                  variant={user?.planType === plan.id ? 'outline' : 'default'}
+                >
+                  {loading === plan.id ? (
+                    <span>Procesando...</span>
+                  ) : user?.planType === plan.id ? (
+                    <span>Plan Actual</span>
+                  ) : plan.id === 'huella-eterna' ? (
+                    'Usar Plan Gratuito'
+                  ) : (
+                    'Elegir Plan'
+                  )}
+                </Button>
               </CardContent>
             </Card>
           ))}
@@ -93,10 +171,9 @@ export default function PricingPage() {
               <thead className="bg-gradient-to-r from-sky-600 to-blue-600 text-white">
                 <tr>
                   <th className="px-6 py-4 text-left font-semibold">Características</th>
-                  {plans.map(plan => (
-                    <th key={plan.id} className="px-6 py-4 text-center font-semibold">
-                      <div className="text-lg">{plan.emoji}</div>
-                      <div className="text-xs mt-1">{plan.emotionalName}</div>
+                  {planArray.map((plan) => (
+                    <th key={plan.id} className="px-6 py-4 text-center font-semibold text-sm">
+                      {plan.name}
                     </th>
                   ))}
                 </tr>
@@ -104,23 +181,23 @@ export default function PricingPage() {
               <tbody className="divide-y divide-gray-200">
                 <tr className="hover:bg-gray-50">
                   <td className="px-6 py-3 font-semibold text-sm">Memoriales</td>
-                  {plans.map(plan => (
+                  {planArray.map((plan) => (
                     <td key={plan.id} className="px-6 py-3 text-center text-sm font-semibold">
-                      {plan.maxMemorials === -1 ? '∞' : plan.maxMemorials}
+                      {plan.memorialLimit === Infinity ? '∞' : plan.memorialLimit}
                     </td>
                   ))}
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="px-6 py-3 font-semibold text-sm">Fotos por memorial</td>
-                  {plans.map(plan => (
+                  {planArray.map((plan) => (
                     <td key={plan.id} className="px-6 py-3 text-center text-sm font-semibold">
-                      {plan.maxPhotosPerMemorial === -1 ? '∞' : plan.maxPhotosPerMemorial}
+                      {plan.photoLimitPerMemorial === Infinity ? '∞' : plan.photoLimitPerMemorial}
                     </td>
                   ))}
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="px-6 py-3 font-semibold text-sm">Tributos ilimitados</td>
-                  {plans.map(plan => (
+                  {planArray.map((plan) => (
                     <td key={plan.id} className="px-6 py-3 text-center">
                       {plan.id !== 'huella-eterna' ? (
                         <span className="text-green-600 text-xl">✓</span>
@@ -131,8 +208,8 @@ export default function PricingPage() {
                   ))}
                 </tr>
                 <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-3 font-semibold text-sm">Sin anuncios</td>
-                  {plans.map(plan => (
+                  <td className="px-6 py-3 font-semibold text-sm">Iconos especiales</td>
+                  {planArray.map((plan) => (
                     <td key={plan.id} className="px-6 py-3 text-center">
                       {plan.id !== 'huella-eterna' ? (
                         <span className="text-green-600 text-xl">✓</span>
@@ -143,16 +220,28 @@ export default function PricingPage() {
                   ))}
                 </tr>
                 <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-3 font-semibold text-sm">Momentos especiales</td>
-                  {plans.map(plan => (
+                  <td className="px-6 py-3 font-semibold text-sm">Recordatorios anuales</td>
+                  {planArray.map((plan) => (
+                    <td key={plan.id} className="px-6 py-3 text-center">
+                      {plan.id === 'santuario-premium' ? (
+                        <span className="text-green-600 text-xl">✓</span>
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+                <tr className="hover:bg-gray-50">
+                  <td className="px-6 py-3 font-semibold text-sm">Destacados semanales</td>
+                  {planArray.map((plan) => (
                     <td key={plan.id} className="px-6 py-3 text-center text-sm font-semibold">
-                      {plan.id === 'huella-eterna' ? '0' : (plan.id === 'cielo-estrellas' ? '3' : '6')}
+                      {plan.id === 'santuario-premium' ? '5' : '0'}
                     </td>
                   ))}
                 </tr>
                 <tr className="hover:bg-gray-50">
-                  <td className="px-6 py-3 font-semibold text-sm">Dashboard stats</td>
-                  {plans.map(plan => (
+                  <td className="px-6 py-3 font-semibold text-sm">Soporte prioritario</td>
+                  {planArray.map((plan) => (
                     <td key={plan.id} className="px-6 py-3 text-center">
                       {plan.id === 'santuario-premium' ? (
                         <span className="text-green-600 text-xl">✓</span>
@@ -169,9 +258,7 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <div className="max-w-3xl mx-auto mt-12">
-          <h2 className="text-3xl font-bold text-center text-nature-800 mb-8">
-            ❓ Preguntas Frecuentes
-          </h2>
+          <h2 className="text-3xl font-bold text-center text-nature-800 mb-8">❓ Preguntas Frecuentes</h2>
 
           <div className="space-y-6">
             <Card>
@@ -187,11 +274,11 @@ export default function PricingPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">¿Cómo funcionan las Estrellas?</CardTitle>
+                <CardTitle className="text-lg">¿Es seguro pagar con Stripe?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700">
-                  Las Estrellas son puntos para crear tributos especiales. Ganas estrellas cada mes según tu plan, o compra paquetes adicionales en la tienda.
+                  Totalmente seguro. Stripe es una plataforma de pagos líder con cifrado de nivel bancario y conformidad PCI.
                 </p>
               </CardContent>
             </Card>
@@ -202,7 +289,7 @@ export default function PricingPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700">
-                  Tu memorial permanece visible para siempre. Con planes pagados, conservas acceso. Con suscripciones, pierdes funciones premium.
+                  Tu memorial permanece visible para siempre. Con planes pagados, mantienes todas las características compradas.
                 </p>
               </CardContent>
             </Card>
@@ -224,9 +311,7 @@ export default function PricingPage() {
         <div className="text-center mt-16">
           <Card className="max-w-2xl mx-auto bg-gradient-to-r from-sky-600 to-blue-600 border-none">
             <CardContent className="pt-8 pb-8">
-              <h3 className="text-3xl font-bold text-white mb-4">
-                ¿Listo para crear un memorial eterno?
-              </h3>
+              <h3 className="text-3xl font-bold text-white mb-4">¿Listo para crear un memorial eterno?</h3>
               <p className="text-white/90 mb-6">
                 Honra la memoria de tu compañero y conecta con otros que comparten tu amor
               </p>
