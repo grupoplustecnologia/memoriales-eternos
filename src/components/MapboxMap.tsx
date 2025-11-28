@@ -1,8 +1,15 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import type { Map, Marker } from 'mapbox-gl';
+
+// Load mapbox CSS dynamically to avoid initialization errors
+if (typeof window !== 'undefined') {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css';
+  document.head.appendChild(link);
+}
 
 interface MapboxMapProps {
   center?: [number, number];
