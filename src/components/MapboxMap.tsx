@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import type { Map, Marker } from 'mapbox-gl';
 
 interface MapboxMapProps {
   center?: [number, number];
@@ -191,28 +191,33 @@ export default function MapboxMap({
       return;
     }
 
-    mapboxgl.accessToken = token;
+    // Dynamic import of mapbox-gl to avoid initialization errors
+    (async () => {
+      const mapboxgl = (await import('mapbox-gl')).default;
+      
+      mapboxgl.accessToken = token;
 
-    if (!mapContainer.current) {
-      return;
-    }
+      if (!mapContainer.current) {
+        return;
+      }
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center,
-      zoom,
-      maxZoom: 14,
-      pitch: 45,
-      bearing: -60,
-    });
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center,
+        zoom,
+        maxZoom: 14,
+        pitch: 45,
+        bearing: -60,
+      });
 
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-    map.current.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+      map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      map.current.addControl(new mapboxgl.FullscreenControl(), 'top-right');
 
-    map.current.on('load', () => {
-      setMapLoaded(true);
-    });
+      map.current.on('load', () => {
+        setMapLoaded(true);
+      });
+    })();
 
     return () => {
       map.current?.remove();
@@ -230,11 +235,13 @@ export default function MapboxMap({
     console.log(`[MapboxMap] Adding ${markers.length} modern markers`);
 
     // Esperar a que el estilo esté completamente listo
-    const addMarkersWhenReady = () => {
+    const addMarkersWhenReady = async () => {
       if (!map.current?.isStyleLoaded()) {
         setTimeout(addMarkersWhenReady, 100);
         return;
       }
+
+      const mapboxgl = (await import('mapbox-gl')).default;
 
       // Add new markers
       markers.forEach((marker) => {
