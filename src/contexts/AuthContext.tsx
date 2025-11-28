@@ -61,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('auth_token', data.session.token);
         localStorage.setItem('auth_session', JSON.stringify(data.session));
         localStorage.setItem('auth_user', JSON.stringify(data.user));
+        console.log('[AuthContext] Login successful for:', data.user.email, 'Role:', data.user.role);
         return { success: true, message: data.message };
       }
 

@@ -1,5 +1,6 @@
 // Authentication system - Prisma + Neon PostgreSQL
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 
 export interface User {
@@ -244,10 +245,11 @@ export async function loginUser(email: string, password: string, deviceName: str
 
     console.log(`[AUTH] User found: ${user.name}, checking password...`);
     
-    const passwordHash = hashPassword(password);
-    console.log(`[AUTH] Password comparison: ${passwordHash.substring(0, 16)}... vs ${user.passwordHash.substring(0, 16)}...`);
+    // Compare password with bcryptjs
+    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
+    console.log(`[AUTH] Password comparison result: ${passwordMatch}`);
     
-    if (user.passwordHash !== passwordHash) {
+    if (!passwordMatch) {
       console.log(`[AUTH] Password mismatch for: ${email}`);
       return { success: false, message: 'Email o contraseña incorrectos' };
     }
