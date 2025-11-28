@@ -33,9 +33,10 @@ export interface AuthResponse {
   errors?: Record<string, string>;
 }
 
-// Hash password (simple implementation - use bcrypt in production)
-function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
+// Hash password with bcrypt
+async function hashPassword(password: string): Promise<string> {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
 }
 
 // Generate secure token
@@ -114,11 +115,12 @@ export async function initializeDemoUsers(): Promise<void> {
     }
 
     // ADMIN USER
+    const adminPasswordHash = await hashPassword('Demo123!');
     await prisma.user.create({
       data: {
         email: 'admin@forever-pet-friend.local',
         name: 'Admin User',
-        passwordHash: hashPassword('Demo123!'),
+        passwordHash: adminPasswordHash,
         emailVerified: true,
         subscriptionTier: 'santuario-premium',
         role: 'admin',
@@ -126,12 +128,15 @@ export async function initializeDemoUsers(): Promise<void> {
       }
     });
 
+    // Hash password for demo users
+    const demoPasswordHash = await hashPassword('Demo123!');
+
     // DEMO USERS
     const demoUsers = [
       {
         email: 'demo@forever-pet-friend.local',
         name: 'Demo User 1',
-        passwordHash: hashPassword('Demo123!'),
+        passwordHash: demoPasswordHash,
         subscriptionTier: 'huella-eterna',
         role: 'user' as const,
         profilePicture: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'
@@ -139,7 +144,7 @@ export async function initializeDemoUsers(): Promise<void> {
       {
         email: 'demo2@forever-pet-friend.local',
         name: 'Demo User 2',
-        passwordHash: hashPassword('Demo123!'),
+        passwordHash: demoPasswordHash,
         subscriptionTier: 'cielo-estrellas',
         role: 'user' as const,
         profilePicture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop'
@@ -147,7 +152,7 @@ export async function initializeDemoUsers(): Promise<void> {
       {
         email: 'demo3@forever-pet-friend.local',
         name: 'Demo User 3',
-        passwordHash: hashPassword('Demo123!'),
+        passwordHash: demoPasswordHash,
         subscriptionTier: 'santuario-premium',
         role: 'user' as const,
         profilePicture: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop'
@@ -197,12 +202,15 @@ export async function registerUser(email: string, password: string, name: string
       return { success: false, message: 'El nombre es requerido', errors: { name: 'El nombre es requerido' } };
     }
 
+    // Hash password with bcrypt
+    const passwordHash = await hashPassword(password);
+
     // Create new user
     const newUser = await prisma.user.create({
       data: {
         email,
         name: name.trim(),
-        passwordHash: hashPassword(password),
+        passwordHash,
         emailVerified: false,
         subscriptionTier: 'huella-eterna',
         role: 'user'
