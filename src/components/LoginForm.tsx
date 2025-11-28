@@ -11,12 +11,28 @@ import Link from 'next/link';
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
+  const { login, isAuthenticated, isLoading: authLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Si ya está autenticado, redirigir inmediatamente
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      const redirectUrl = searchParams.get('redirect');
+      const plan = searchParams.get('plan');
+      
+      if (redirectUrl && plan) {
+        router.push(`${redirectUrl}?plan=${plan}`);
+      } else if (redirectUrl) {
+        router.push(redirectUrl);
+      } else {
+        router.push('/map');
+      }
+    }
+  }, [isAuthenticated, authLoading, searchParams, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +61,20 @@ export function LoginForm() {
       setIsLoading(false);
     }
   };
+
+  // Si está cargando la autenticación, mostrar loading
+  if (authLoading) {
+    return (
+      <Card className="shadow-lg border-nature-200">
+        <CardContent className="pt-8 pb-8 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin inline-block w-8 h-8 border-4 border-nature-600 border-t-transparent rounded-full"></div>
+            <p className="mt-4 text-gray-600">Verificando sesión...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="shadow-lg border-nature-200">
