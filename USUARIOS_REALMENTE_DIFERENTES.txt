@@ -1,0 +1,265 @@
+```
+╔════════════════════════════════════════════════════════════════════╗
+║          ✅ SISTEMA ARREGLADO Y COMPLETAMENTE DIFERENCIADO      ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🛡️  ADMIN (SOLO TÚ - Acceso Total)                             ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃                                                                 ┃
+┃  📧 Email: demo@memorias-eternas.local                         ┃
+┃  🔑 Password: Demo123!                                         ┃
+┃  🛡️  Role: ADMIN (rol de administrador)                       ┃
+┃  ⭐ Estrellas: 999 (ilimitadas)                               ┃
+┃                                                                 ┃
+┃  ✅ Permisos:                                                  ┃
+┃     ├─ Acceso a /admin panel                                  ┃
+┃     ├─ Gestionar usuarios                                      ┃
+┃     ├─ Ver estadísticas globales                              ┃
+┃     └─ Control total del sistema                              ┃
+┃                                                                 ┃
+┃  ❌ ESTOS 3 USUARIOS DEBAJO NO ACCEDEN A /ADMIN               ┃
+┃                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 🌱 USUARIO 1: HUELLA ETERNA (Plan Gratuito)                    ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃                                                                 ┃
+┃  📧 Email: huella@memorias-eternas.local                       ┃
+┃  🔑 Password: Demo123!                                         ┃
+┃  👤 Role: USER (usuario normal - NO es admin)                 ┃
+┃  ⭐ Estrellas: 4 mensuales                                     ┃
+┃                                                                 ┃
+┃  💡 CON 4 ESTRELLAS PUEDO:                                     ┃
+┃     ├─ 4 velas blancas (1⭐ c/u)                              ┃
+┃     ├─ 2 flores + 1 vela (2⭐ + 2⭐ + 1⭐)                    ┃
+┃     ├─ 1 corazón + 1 vela (3⭐ + 1⭐)                         ┃
+┃     └─ O comprar más en la tienda                             ┃
+┃                                                                 ┃
+┃  🔓 Plan Gratuito = 0 privilegios                             ┃
+┃     ├─ 1 memorial solamente                                    ┃
+┃     ├─ 5 fotos máximo                                          ┃
+┃     ├─ 0 momentos especiales                                   ┃
+┃     ├─ ❌ Sin Dashboard                                        ┃
+┃     └─ ❌ Sin acceso a /admin                                 ┃
+┃                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ✨ USUARIO 2: CIELO DE ESTRELLAS (Plan Premium)                ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃                                                                 ┃
+┃  📧 Email: cielo@memorias-eternas.local                        ┃
+┃  🔑 Password: Demo123!                                         ┃
+┃  👤 Role: USER (usuario normal - NO es admin)                 ┃
+┃  ⭐ Estrellas: 10 mensuales (2.5x más que Huella)            ┃
+┃                                                                 ┃
+┃  💡 CON 10 ESTRELLAS PUEDO:                                    ┃
+┃     ├─ 10 velas blancas (1⭐ c/u)                             ┃
+┃     ├─ 5 flores + 5 velas (2⭐ + 1⭐ = 15, falta 1)          ┃
+┃     ├─ 2 velas doradas (5⭐ c/u)                             ┃
+┃     ├─ 1 flor celestial (10⭐ exacto)                        ┃
+┃     └─ O comprar más en la tienda                             ┃
+┃                                                                 ┃
+┃  ✅ Plan Premium = Más beneficios                             ┃
+┃     ├─ Hasta 5 memoriales                                      ┃
+┃     ├─ 20 fotos máximo por memorial                           ┃
+┃     ├─ 3 momentos especiales (primer día, último adiós, etc) ┃
+┃     ├─ ❌ Sin Dashboard                                        ┃
+┃     └─ ❌ Sin acceso a /admin                                 ┃
+┃                                                                 ┃
+┃  📊 DIFERENCIA CON HUELLA:                                     ┃
+┃     └─ 2.5x más estrellas, 5x más memoriales, 3 momentos     ┃
+┃                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 👑 USUARIO 3: SANTUARIO PREMIUM (Plan Premium+)               ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃                                                                 ┃
+┃  📧 Email: santuario@memorias-eternas.local                    ┃
+┃  🔑 Password: Demo123!                                         ┃
+┃  👤 Role: USER (usuario normal - NO es admin)                 ┃
+┃  ⭐ Estrellas: 30 mensuales (7.5x más que Huella)            ┃
+┃                                                                 ┃
+┃  💡 CON 30 ESTRELLAS PUEDO:                                    ┃
+┃     ├─ 30 velas blancas (1⭐ c/u)                             ┃
+┃     ├─ 1 corona de flores + 5 velas (25⭐ + 5⭐ = 30)        ┃
+┃     ├─ 3 flores celestiales (10⭐ c/u = 30)                 ┃
+┃     ├─ 6 corazones eternos (3⭐ c/u = 18)                  ┃
+┃     └─ O mucha más combinación                                ┃
+┃                                                                 ┃
+┃  👑 Plan Premium+ = ACCESO TOTAL                              ┃
+┃     ├─ Memoriales ILIMITADOS                                   ┃
+┃     ├─ Fotos ILIMITADAS                                        ┃
+┃     ├─ 6 momentos especiales (TODOS DESBLOQUEADOS)           ┃
+┃     ├─ ✅ ACCESO A DASHBOARD (estadísticas)                   ┃
+┃     ├─ Videos permitidos                                       ┃
+┃     ├─ Tributos ilimitados (pero limitados por ⭐)           ┃
+┃     └─ ❌ Sin acceso a /admin                                 ┃
+┃                                                                 ┃
+┃  📊 DIFERENCIA CON LOS OTROS:                                  ┃
+┃     ├─ 7.5x más estrellas que Huella                          ┃
+┃     ├─ 3x más estrellas que Cielo                             ┃
+┃     ├─ ✅ SOLO ESTE TIENE DASHBOARD                           ┃
+┃     ├─ ✅ TODOS LOS MOMENTOS ESPECIALES                       ┃
+┃     └─ ✅ MEMORIALES Y FOTOS ILIMITADAS                       ┃
+┃                                                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║                   🌟 SISTEMA DE ESTRELLAS                       ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  ACCIÓN           │  COSTO  │  DURACIÓN  │  QUIÉN LO PUEDE VER ║
+║  ─────────────────┼─────────┼────────────┼──────────────────    ║
+║  Vela Blanca 🕯️  │  1⭐   │  1 día     │  Todos              ║
+║  Corazón ❤️      │  3⭐   │  7 días    │  Todos              ║
+║  Flor 🌹         │  2⭐   │  3 días    │  Todos              ║
+║  Vela Dorada ✨  │  5⭐   │  7 días    │  Todos              ║
+║  Flor Celestial 🌸│ 10⭐  │ 14 días    │  Todos              ║
+║  Corona 👑🌹     │ 25⭐  │ 30 días    │  Todos              ║
+║                                                                  ║
+║  ⚡ Ejemplo: Si Huella deja una flor a Rey:                   ║
+║     └─ Cuesta 2⭐ (Huella baja de 4 a 2)                     ║
+║     └─ Rey ve la flor en su memorial                           ║
+║     └─ Cielo también ve la flor cuando visite                 ║
+║                                                                  ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║              🎯 CÓMO PROBAR QUE TODO FUNCIONA                  ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  1. LOGIN COMO HUELLA (4⭐)                                    ║
+║     ├─ Ve a /auth/login                                        ║
+║     ├─ Email: huella@memorias-eternas.local                   ║
+║     ├─ Password: Demo123!                                      ║
+║     └─ ✅ Verás que tienes 4 estrellas                        ║
+║                                                                  ║
+║  2. VE AL MAPA Y DEJA UN TRIBUTO                              ║
+║     ├─ Ve a /map                                               ║
+║     ├─ Busca un memorial de CIELO o SANTUARIO                 ║
+║     ├─ Haz clic y "Dejar Tributo"                             ║
+║     ├─ Selecciona una FLOR (cuesta 2⭐)                       ║
+║     └─ ✅ Tus estrellas bajan de 4 a 2                        ║
+║                                                                  ║
+║  3. LOGOUT Y LOGIN COMO CIELO (10⭐)                          ║
+║     ├─ Haz logout desde el dropdown                            ║
+║     ├─ Email: cielo@memorias-eternas.local                    ┃
+║     ├─ Password: Demo123!                                      ║
+║     └─ ✅ Verás que tienes 10 estrellas                       ║
+║                                                                  ║
+║  4. VE AL MISMO MEMORIAL DE HUELLA                            ║
+║     ├─ Ve a /map                                               ║
+║     ├─ Haz clic en el memorial donde HUELLA dejó tributo      ║
+║     ├─ ✅ VES LA FLOR DE HUELLA ALLÍ                          ║
+║     └─ Puedes dejar tu propio tributo                         ║
+║                                                                  ║
+║  5. AHORA LOGIN COMO SANTUARIO (30⭐)                         ║
+║     ├─ Haz logout desde el dropdown                            ║
+║     ├─ Email: santuario@memorias-eternas.local               ║
+║     ├─ Password: Demo123!                                      ║
+║     └─ ✅ Verás que tienes 30 estrellas                       ║
+║                                                                  ║
+║  6. VE A /user/subscription                                    ║
+║     ├─ ✅ ¡SOLO SANTUARIO TIENE DASHBOARD!                    ║
+║     ├─ Ver estadísticas (visitas, tributos)                    ║
+║     ├─ Ver gráficos                                            ║
+║     └─ Los otros usuarios NO ven esto                          ║
+║                                                                  ║
+║  7. INTENTA ACCEDER AL PANEL ADMIN                            ║
+║     ├─ Ve a /admin                                             ║
+║     ├─ ❌ Error (no tienes permisos)                           ║
+║     └─ SOLO demo@memorias-eternas.local puede                ║
+║                                                                  ║
+║  8. LOGIN COMO ADMIN (999⭐)                                   ║
+║     ├─ Haz logout                                              ║
+║     ├─ Email: demo@memorias-eternas.local                     ║
+║     ├─ Password: Demo123!                                      ║
+║     ├─ Ve a /admin                                             ║
+║     └─ ✅ ¡Tienes acceso total!                               ║
+║                                                                  ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║                    📊 COMPARATIVA COMPLETA                      ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  MÉTRICA                │ HUELLA │ CIELO │ SANTUARIO │ ADMIN  ║
+║  ────────────────────────┼────────┼───────┼───────────┼────    ║
+║  Role                    │ USER   │ USER  │   USER    │ ADMIN  ║
+║  Estrellas/mes           │   4    │   10  │    30     │  999   ║
+║  Memoriales              │   1    │   5   │    ∞      │   -    ║
+║  Fotos/memorial          │   5    │   20  │    ∞      │   -    ║
+║  Momentos Especiales     │   0/6  │  3/6  │   6/6     │   -    ║
+║  Dashboard              │  ❌    │  ❌   │   ✅      │   -    ║
+║  Panel Admin            │  ❌    │  ❌   │   ❌      │   ✅   ║
+║  Videos                 │  ❌    │  ❌   │   ✅      │   -    ║
+║  Tributos Ilimitados    │  ❌    │  ❌   │   ✅      │   -    ║
+║                                                                  ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+╔════════════════════════════════════════════════════════════════════╗
+║                   ✅ RESUMEN DE CAMBIOS                          ║
+╠════════════════════════════════════════════════════════════════════╣
+║                                                                  ║
+║  ✅ Agregado campo 'role' en User interface                    ║
+║  ✅ Admin user: demo@memorias-eternas.local (role: 'admin')   ║
+║  ✅ Demo users: 3 usuarios normales (role: 'user')             ║
+║  ✅ Estrellas diferenciadas: 4, 10, 30 (+ 999 para admin)     ║
+║  ✅ Solo ADMIN accede a /admin                                ║
+║  ✅ Usuarios normales NO ven panel admin                       ║
+║  ✅ Documento completo: SISTEMA_ESTRELLAS_EXPLICADO.md        ║
+║  ✅ Ejemplo de cómo funciona cada cosa                         ║
+║  ✅ Ciclo de estrellas explicado                              ║
+║  ✅ Costo de tributos claramente indicado                      ║
+║                                                                  ║
+╚════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## 📁 Archivos Actualizados
+
+✅ **src/lib/auth.ts**
+- Agregado campo `role: 'user' | 'admin'` en User interface
+- Admin user creado: `demo@memorias-eternas.local`
+- 3 usuarios demo con `role: 'user'` (NO son admin)
+- getDemoCredentials() actualizado
+
+✅ **SISTEMA_ESTRELLAS_EXPLICADO.md** (NUEVO)
+- Explicación completa de estrellas
+- Distribución por plan
+- Costo de tributos
+- Ejemplos prácticos
+- Ciclo de estrellas
+
+---
+
+## 🎯 Lo importante
+
+**LOS USUARIOS YA NO SON IDÉNTICOS porque:**
+
+1. **Roles diferentes** - Solo ADMIN tiene acceso a /admin
+2. **Estrellas diferentes** - 4, 10, 30 (no 4, 4, 4)
+3. **Planes diferentes** - Gratuito, Premium, Premium+
+4. **Acceso diferente** - Dashboard solo en Premium+
+5. **Features bloqueados** - Momentos especiales por plan
+
+**Las estrellas ahora funcionan como moneda:**
+- Se reciben cada mes (según plan)
+- Se gastan en tributos (flor 2⭐, vela 1⭐, corona 25⭐)
+- Se pueden comprar en tienda
+- Se recargan al final del mes
+
+Lee **SISTEMA_ESTRELLAS_EXPLICADO.md** para entender perfectamente cómo funciona todo.

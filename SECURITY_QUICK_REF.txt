@@ -1,0 +1,63 @@
+# 🛡️ ADMIN SECURITY - QUICK REFERENCE
+
+## Problem Fixed ✅
+Regular users could see "Panel Admin" option and potentially access admin panel.
+
+## Solution Summary
+
+### 1. Navbar Dropdown
+- Show "🛡️ Panel Admin" ONLY if `user.role === 'admin'`
+- File: `src/components/NavbarClient.tsx`
+
+### 2. Admin Page Access Control
+- Block non-admin users with redirect to home `/`
+- File: `src/app/admin/page.tsx`
+
+### 3. Database Policy
+- Only `demo@memorias-eternas.local` is admin
+- File: `src/lib/auth.ts`
+
+## Admin Credentials (ÚNICO)
+
+```
+Email: demo@memorias-eternas.local
+Pass:  Demo123!
+```
+
+## User Behavior
+
+### Regular User (New Profile)
+```
+Dropdown shows:
+❌ Mi Perfil
+❌ Mis Memoriales  
+❌ Mi Suscripción
+❌ Configuración
+❌ NO "Panel Admin"
+```
+
+### Admin User (demo@...)
+```
+Dropdown shows:
+✅ Mi Perfil
+✅ Mis Memoriales
+✅ Mi Suscripción
+✅ Configuración
+✅ "🛡️ Panel Admin" (ONLY THIS USER)
+```
+
+## Security Layers
+
+1. **UI**: Conditional rendering
+2. **Page**: Role verification + redirect
+3. **Database**: Single admin policy
+4. **Registration**: Always creates 'user' role
+
+## Build Status
+✅ Success (0 errors)
+
+## Testing
+- ✅ New user: NO see admin option
+- ✅ New user: Cannot access /admin
+- ✅ Admin user: CAN see and access admin panel
+- ✅ Only demo@memorias-eternas.local is admin

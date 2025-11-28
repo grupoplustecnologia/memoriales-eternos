@@ -1,0 +1,345 @@
+// Forever Pet Friend - Prisma Schema
+// PostgreSQL Database (Neon)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USUARIOS ====================
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  name              String
+  passwordHash      String
+  profilePicture    String?
+  emailVerified     Boolean   @default(false)
+  
+  // Suscripción y plan
+  subscriptionTier  String    @default("huella-eterna")
+  role              String    @default("user")
+  
+  // Relaciones
+  profiles          AnimalProfile[]
+  tributes          Tribute[]
+  specialMoments    SpecialMoment[]
+  sessions          Session[]
+  privacySettings   PrivacySettings?
+  likes             Like[]
+  reactions         Reaction[]
+  comments          Comment[]
+  tributeLikes      TributeLike[]
+  tributeReports    TributeReport[]
+  tributeReplies    TributeReply[]
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Session {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token             String    @unique
+  deviceName        String    @default("Web")
+  
+  createdAt         DateTime  @default(now())
+  expiresAt         DateTime
+  
+  @@map("sessions")
+}
+
+model PrivacySettings {
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Configuración de Privacidad
+  profilePublic     Boolean   @default(true)
+  memorialsVisible  Boolean   @default(true)
+  anonymousTributes Boolean   @default(false)
+  publicStats       Boolean   @default(true)
+  searchEngineIndexing Boolean @default(false)
+  
+  // Preferencias de Privacidad Adicionales
+  blockedUsers      String[]  @default([])
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("privacy_settings")
+}
+
+// ==================== MEMORIALES ====================
+
+model AnimalProfile {
+  id                String    @id @default(cuid())
+  slug              String    @unique @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name              String
+  animalType        String
+  breed             String?
+  birthDate         DateTime
+  deathDate         DateTime
+  
+  latitude          Float
+  longitude         Float
+  
+  photoUrl          String
+  story             String
+  epitaph           String
+  gallery           String[]  @default([])
+  
+  tributes          Tribute[]
+  specialMoments    SpecialMoment[]
+  highlights        ProfileHighlight[]
+  likes             Like[]
+  reactions         Reaction[]
+  comments          Comment[]
+  tags              ProfileTag[]
+  
+  isCollaborative   Boolean   @default(false)
+  collaborators     MemorialCollaborator[]
+  isPublic          Boolean   @default(false)
+  
+  viewCount         Int       @default(0)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("animal_profiles")
+}
+
+model MemorialCollaborator {
+  id                String    @id @default(cuid())
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  userId            String
+  email             String
+  name              String
+  role              String    @default("viewer")
+  status            String    @default("pending")
+  
+  addedAt           DateTime  @default(now())
+  acceptedAt        DateTime?
+
+  @@unique([profileId, email])
+  @@map("memorial_collaborators")
+}
+
+// ==================== TRIBUTOS ====================
+
+model Tribute {
+  id                String    @id @default(cuid())
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  visitorId         String?
+  visitor           User?     @relation(fields: [visitorId], references: [id], onDelete: SetNull)
+  visitorName       String
+  
+  tributeType       String
+  message           String?
+  
+  durationDays      Int       @default(1)
+  
+  likes             TributeLike[]
+  reports           TributeReport[]
+  replies           TributeReply[]
+  
+  createdAt         DateTime  @default(now())
+  expiresAt         DateTime?
+
+  @@map("tributes")
+}
+
+// ==================== MOMENTOS ESPECIALES ====================
+
+model SpecialMoment {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  type              String
+  title             String
+  description       String
+  date              DateTime?
+  images            String[]  @default([])
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("special_moments")
+}
+
+// ==================== DESTACADOS ====================
+
+model ProfileHighlight {
+  id                String    @id @default(cuid())
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  weekStartDate     DateTime
+  isActive          Boolean   @default(true)
+  
+  createdAt         DateTime  @default(now())
+  
+  @@unique([profileId, weekStartDate])
+  @@map("profile_highlights")
+}
+
+// ==================== FUNCIONALIDADES SOCIALES ====================
+
+model Like {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  createdAt         DateTime  @default(now())
+  
+  @@unique([userId, profileId])
+  @@map("likes")
+}
+
+model Reaction {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  emoji             String
+  
+  createdAt         DateTime  @default(now())
+  
+  @@unique([userId, profileId, emoji])
+  @@map("reactions")
+}
+
+model Comment {
+  id                String    @id @default(cuid())
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  visitorId         String?
+  visitor           User?     @relation(fields: [visitorId], references: [id], onDelete: SetNull)
+  visitorName       String
+  visitorEmail      String?
+  
+  message           String
+  isApproved        Boolean   @default(true)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("comments")
+}
+
+model Tag {
+  id                String    @id @default(cuid())
+  name              String    @unique
+  slug              String    @unique
+  description       String?
+  
+  profiles          ProfileTag[]
+  
+  createdAt         DateTime  @default(now())
+
+  @@map("tags")
+}
+
+model ProfileTag {
+  id                String    @id @default(cuid())
+  profileId         String
+  profile           AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  tagId             String
+  tag               Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@unique([profileId, tagId])
+  @@map("profile_tags")
+}
+
+// ==================== TRIBUTOS - FUNCIONALIDADES ====================
+
+model TributeLike {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tributeId         String
+  tribute           Tribute   @relation(fields: [tributeId], references: [id], onDelete: Cascade)
+  
+  createdAt         DateTime  @default(now())
+  
+  @@unique([userId, tributeId])
+  @@map("tribute_likes")
+}
+
+model TributeReport {
+  id                String    @id @default(cuid())
+  tributeId         String
+  tribute           Tribute   @relation(fields: [tributeId], references: [id], onDelete: Cascade)
+  
+  reportedByUserId  String?
+  reportedByUser    User?     @relation(fields: [reportedByUserId], references: [id], onDelete: SetNull)
+  
+  reason            String
+  description       String?
+  status            String    @default("pending")
+  adminNotes        String?
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("tribute_reports")
+}
+
+model TributeReply {
+  id                String    @id @default(cuid())
+  tributeId         String
+  tribute           Tribute   @relation(fields: [tributeId], references: [id], onDelete: Cascade)
+  
+  authorId          String
+  author            User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  message           String
+  isApproved        Boolean   @default(true)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("tribute_replies")
+}
+
+// ==================== AUDITORÍA ====================
+
+model AdminLog {
+  id                String    @id @default(cuid())
+  action            String
+  entity            String
+  entityId          String
+  changes           Json?
+  adminId           String
+  
+  createdAt         DateTime  @default(now())
+
+  @@map("admin_logs")
+}
