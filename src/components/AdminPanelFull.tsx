@@ -146,7 +146,7 @@ export function AdminPanel() {
 
   useEffect(() => {
     // Si no está autenticado o no es admin, no hacer nada
-    if (!isAuthenticated || user?.role !== 'admin') {
+    if (!isAuthenticated || user?.role !== 'ADMIN') {
       console.log('⏳ Waiting for admin authentication...', { isAuthenticated, role: user?.role });
       setLoading(false);
       return;
@@ -221,7 +221,7 @@ export function AdminPanel() {
   }, [isAuthenticated, user?.role]);
 
   // Si no está autenticado o no es admin, mostrar formulario de login
-  if (!isAuthenticated || user?.role !== 'admin') {
+  if (!isAuthenticated || user?.role !== 'ADMIN') {
     return <AdminLoginForm />;
   }
 

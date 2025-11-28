@@ -165,7 +165,7 @@ export function CommentsSection({ profileId }: CommentsSectionProps) {
                     {new Date(comment.createdAt).toLocaleDateString('es-ES')}
                   </p>
                 </div>
-                {(user?.id === comment.visitor?.id || user?.role === 'admin') && (
+                {(user?.id === comment.visitor?.id || user?.role === 'ADMIN') && (
                   <button
                     onClick={() => handleDelete(comment.id)}
                     className="text-gray-400 hover:text-red-500 transition-colors"

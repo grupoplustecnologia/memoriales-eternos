@@ -149,7 +149,7 @@ export function NavbarClient() {
                   ⚙️ Configuración
                 </button>
               </Link>
-              {user.role === 'admin' && (
+              {user.role === 'ADMIN' && (
                 <>
                   <Link href="/admin">
                     <button className="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50 flex items-center gap-2">
@@ -159,7 +159,7 @@ export function NavbarClient() {
                   <hr className="my-1 border-nature-100" />
                 </>
               )}
-              {user.role !== 'admin' && <hr className="my-1 border-nature-100" />}
+              {user.role !== 'ADMIN' && <hr className="my-1 border-nature-100" />}
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10 flex items-center gap-2"

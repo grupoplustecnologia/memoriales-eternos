@@ -28,7 +28,7 @@ export function AdminPanel() {
   const [starsToAdd, setStarsToAdd] = useState('');
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'admin') {
+    if (!isAuthenticated || user?.role !== 'ADMIN') {
       return;
     }
 
@@ -54,7 +54,7 @@ export function AdminPanel() {
     fetchUsers();
   }, [isAuthenticated, user?.role]);
 
-  if (!isAuthenticated || user?.role !== 'admin') {
+  if (!isAuthenticated || user?.role !== 'ADMIN') {
     return (
       <Card className="border-red-200 bg-red-50">
         <CardContent className="pt-6">
@@ -152,7 +152,7 @@ export function AdminPanel() {
                 <option value="">-- Selecciona --</option>
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>
-                    {u.email} {u.role === 'admin' && '(Admin)'}
+                    {u.email} {u.role === 'ADMIN' && '(Admin)'}
                   </option>
                 ))}
               </select>
@@ -218,7 +218,7 @@ export function AdminPanel() {
                       </td>
                       <td className="p-2">
                         <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                          u.role === 'admin'
+                          u.role === 'ADMIN'
                             ? 'bg-purple-100 text-purple-700'
                             : 'bg-gray-100 text-gray-700'
                         }`}>
