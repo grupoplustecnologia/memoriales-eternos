@@ -24,11 +24,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: result.message,
-        data: {
-          user: result.user,
-          token: result.session?.token,
-          session: result.session
-        }
+        user: result.user,
+        session: result.session
       }, {
         status: 200
       });
