@@ -428,6 +428,68 @@ export const generateSitemapUrls = (profiles?: Array<{ id: string; updatedAt?: s
       loc: `${baseUrl}/homenaje-virtual-mi-mascota`,
       changefreq: 'weekly',
       priority: 0.85
+    },
+    // PHASE 4: Crear Memorial Pages
+    {
+      loc: `${baseUrl}/crear-memorial-mascota`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-perro`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-gato`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-mascota-exotica`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-conejo`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-hamster`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-pajaro`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-loro`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/crear-memorial-tortuga`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    // PHASE 4: Registrar Mascota Pages
+    {
+      loc: `${baseUrl}/registrar-mascota-cementerio-virtual`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/registrar-perro-cementerio-virtual`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/registrar-gato-cementerio-virtual`,
+      changefreq: 'weekly',
+      priority: 0.85
     }
   ];
 
