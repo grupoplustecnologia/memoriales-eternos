@@ -295,6 +295,57 @@ export const generateSitemapUrls = (profiles?: Array<{ id: string; updatedAt?: s
       loc: `${baseUrl}/memorial-gatos-online`,
       changefreq: 'weekly',
       priority: 0.85
+    },
+    // Phase 2 - Additional SEO Landing Pages
+    {
+      loc: `${baseUrl}/cementerio-virtual-conejos`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-hamsters`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-cobayas`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-loros`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-pajaros`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-hurones`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-tortugas`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-animales-compania`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-animales-domesticos`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-perros-gatos`,
+      changefreq: 'weekly',
+      priority: 0.85
     }
   ];
 
