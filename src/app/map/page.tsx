@@ -173,7 +173,7 @@ export default function MapPage() {
           {/* Carousel - Horizontal Scrollable */}
           <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-3 sm:gap-4 pb-2">
-              {filteredProfiles.slice(-10).reverse().map((profile, idx) => (
+              {filteredProfiles.filter(p => p.userSubscriptionTier && p.userSubscriptionTier !== 'huella-eterna').slice(-10).reverse().map((profile, idx) => (
                 <Link
                   key={`${profile.id}-${idx}`}
                   href={`/profile/${profile.id}`}

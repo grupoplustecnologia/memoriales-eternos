@@ -66,12 +66,12 @@ export default function ProfilePage() {
       setLoading(true);
 
       // Obtener memoriales del usuario
-      const memorialsRes = await fetch(`/api/profiles/${user?.id}`, {
+      const memorialsRes = await fetch(`/api/profiles/user`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
       });
       if (memorialsRes.ok) {
         const data = await memorialsRes.json();
-        setMyMemorials(data.profiles || []);
+        setMyMemorials(data.data || []);
       }
 
       // Obtener tributos recibidos

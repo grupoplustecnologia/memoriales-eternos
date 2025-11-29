@@ -34,8 +34,8 @@ const createCustomIcon = (type: string, isSelected: boolean = false, userPlan?: 
     const markerSize = PlanPermissionsService.getMapMarkerSize(userPlan as any);
     const markerHighlight = PlanPermissionsService.getMapMarkerHighlight(userPlan as any);
     
-    // Size multipliers: small=0.5, medium=1, large=1.2, xlarge=1.6
-    const sizeMap = { small: 0.5, medium: 1, large: 1.2, xlarge: 1.6 };
+    // Size multipliers: small=0.5, medium=0.5, large=1.2, xlarge=1.6
+    const sizeMap = { small: 0.5, medium: 0.5, large: 1.2, xlarge: 1.6 };
     baseSizeMultiplier = sizeMap[markerSize as keyof typeof sizeMap] || 1;
     
     // Apply red background for xlarge marked profiles
