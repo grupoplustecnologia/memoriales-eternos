@@ -12,17 +12,47 @@ function CheckoutSuccessContent() {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const sessionId = searchParams.get('session_id');
-    const planId = searchParams.get('plan');
+    const verifyPayment = async () => {
+      try {
+        const sessionId = searchParams.get('session_id');
+        const planId = searchParams.get('plan');
 
-    if (sessionId && planId) {
-      setPlan(planId);
-      setSuccess(true);
-    }
+        console.log('[CheckoutSuccess] Session ID:', sessionId);
+        console.log('[CheckoutSuccess] Plan ID:', planId);
 
-    setLoading(false);
+        if (!sessionId || !planId) {
+          setError('Parámetros inválidos');
+          setLoading(false);
+          return;
+        }
+
+        // Verificar la sesión de Stripe en el servidor
+        const response = await fetch('/api/checkout/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId, planId }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setPlan(planId);
+          setSuccess(true);
+        } else {
+          setError(data.message || 'No pudimos verificar tu pago');
+        }
+      } catch (err) {
+        console.error('[CheckoutSuccess] Error:', err);
+        setError('Error al verificar el pago');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyPayment();
   }, [searchParams]);
 
   if (loading) {
@@ -44,7 +74,7 @@ function CheckoutSuccessContent() {
             <CardTitle className="text-red-600">Error en el pago</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-700 mb-4">No pudimos verificar tu pago. Por favor, intenta nuevamente.</p>
+            <p className="text-gray-700 mb-4">{error || 'No pudimos verificar tu pago. Por favor, intenta nuevamente.'}</p>
             <Link href="/pricing">
               <Button className="w-full">Volver a Planes</Button>
             </Link>

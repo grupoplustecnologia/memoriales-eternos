@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe-server';
 import { PLANS } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
-import { verifyAuth } from '@/lib/auth';
+import { verifySessionToken } from '@/lib/auth';
 
 // Stripe checkout session endpoint
 export async function POST(request: NextRequest) {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const stripe = await getStripe();
     
     // Obtener el token del usuario
-    const token = request.headers.get('authorization')?.split(' ')[1];
+    const token = request.headers.get('authorization')?.replace('Bearer ', '') || request.cookies.get('auth_token')?.value;
     if (!token) {
       return NextResponse.json(
         { error: 'No autorizado' },
@@ -18,13 +18,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const decoded = await verifyAuth(token);
-    if (!decoded) {
+    const authResult = await verifySessionToken(token);
+    if (!authResult.valid || !authResult.user) {
       return NextResponse.json(
         { error: 'Token inválido' },
         { status: 401 }
       );
     }
+
+    const user = authResult.user;
 
     // Obtener el plan del request
     const { planId } = await request.json();
@@ -39,32 +41,32 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener o crear el cliente de Stripe
-    let user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+    let dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
     });
 
-    if (!user) {
+    if (!dbUser) {
       return NextResponse.json(
         { error: 'Usuario no encontrado' },
         { status: 404 }
       );
     }
 
-    let stripeCustomerId = user.stripeCustomerId;
+    let stripeCustomerId = dbUser.stripeCustomerId;
 
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
-        email: user.email,
-        name: user.name,
+        email: dbUser.email,
+        name: dbUser.name,
         metadata: {
-          userId: user.id,
+          userId: dbUser.id,
         },
       });
       stripeCustomerId = customer.id;
 
       // Actualizar el usuario con el ID de cliente de Stripe
       await prisma.user.update({
-        where: { id: user.id },
+        where: { id: dbUser.id },
         data: { stripeCustomerId },
       });
     }
@@ -73,7 +75,7 @@ export async function POST(request: NextRequest) {
     if (plan.id === 'huella-eterna') {
       // Actualizar el plan del usuario
       await prisma.user.update({
-        where: { id: user.id },
+        where: { id: dbUser.id },
         data: {
           planType: 'free',
           subscriptionStatus: 'active',
@@ -89,8 +91,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear sesión de checkout de Stripe
-    const successUrl = `${request.nextUrl.origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&plan=${planId}`;
-    const cancelUrl = `${request.nextUrl.origin}/pricing`;
+    // Usar localhost en lugar de 0.0.0.0 para evitar errores de redirección
+    const origin = request.nextUrl.origin.replace('0.0.0.0', 'localhost');
+    const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&plan=${planId}`;
+    const cancelUrl = `${origin}/pricing`;
 
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomerId,
@@ -113,7 +117,7 @@ export async function POST(request: NextRequest) {
       success_url: successUrl,
       cancel_url: cancelUrl,
       metadata: {
-        userId: user.id,
+        userId: dbUser.id,
         planId: plan.id,
       },
     });

@@ -1,102 +1,86 @@
-# AI Copilot Instructions - Forever Pet Friend
+# AI Copilot Instructions - Forever Pet Friend (Memorias Eternas)
 
 ## 🎯 Project Overview
-**Forever Pet Friend** is a production-ready Next.js 15 full-stack pet memorial platform (v1.0, Nov 2025). Users create digital memorials for deceased pets, place them on an interactive world map, and engage through a rich social layer: likes, emoji reactions, comments, tributes, tags, and search/discovery.
+
+**Forever Pet Friend** is a production-ready Next.js 15 full-stack pet memorial platform (v1.0, Nov 2025). Users create digital memorials for deceased pets, place them on an interactive world map, and engage through rich social features: likes, emoji reactions, comments, tributes, tags, and search/discovery.
 
 **Core Value**: Combines commemoration (memorials + tributes) with community (social features + discovery).
 
 ### Stack
-- **Frontend**: Next.js 15.5+ (App Router, Turbopack), TypeScript, React 18, Tailwind CSS, shadcn/ui, Leaflet maps
+- **Frontend**: Next.js 15.5+ (App Router, Turbopack), React 18, TypeScript 5, Tailwind CSS, shadcn/ui, Leaflet maps
 - **Backend**: API routes (`src/app/api/*`), Prisma ORM v6.19+
-- **Database**: Neon PostgreSQL (defined in `prisma/schema.prisma`)
-- **Auth**: Local password-based authentication + JWT tokens in Session table, localStorage
-- **Build**: Bun (preferred), npm fallback; Biome formatter + ESLint, Next.js Turbopack
-- **Deployment**: Ready for production (tested on Netlify)
+- **Database**: Neon PostgreSQL (`prisma/schema.prisma`)
+- **Auth**: Password-based (bcryptjs) + JWT tokens stored in `Session` table, localStorage
+- **Build**: Bun (preferred), npm fallback; Biome formatter, ESLint, Turbopack
+- **Deployment**: Netlify-ready (tested in production)
 
 ---
 
-## 📊 Architecture: Layered Service Pattern
+## 🏗️ Architecture: Layered Service Pattern
 
-### Core Request Flow
+### Request Flow
 ```
-React Component
-  ↓ (useProfiles(), useLikes(), useComments(), etc.)
-fetch('/api/{resource}', { headers: { 'Authorization': 'Bearer token' } })
+React Component ('use client' hook or form)
+  ↓
+fetch('/api/{resource}', { headers: { Authorization: 'Bearer {token}' } })
   ↓
 API Route (src/app/api/{resource}/route.ts)
   ├─ Extract & verify auth token → get user.id
-  ├─ Validate role/permissions via AuthorizationService
+  ├─ Check plan permissions via PlanPermissionsService
   └─ Call service function
      ↓
 Service Layer (src/lib/*Service.ts)
   ├─ Business logic + validation
-  ├─ Prisma queries
-  └─ Error handling
+  ├─ Prisma queries + transforms
+  └─ Throw errors with messages
      ↓
 Neon PostgreSQL
 ```
 
-### Key Service Layers (src/lib/)
-1. **profilesService.ts** - Memorials (CRUD, collaboration, visibility)
-2. **tributesService.ts** - Tribute interactions (create, expire, list)
-3. **likesService.ts** - Like toggle, counts, user checks
-4. **reactionsService.ts** - Emoji reactions (8 types: ❤️, 😢, 🙏, 😊, 🌹, ⭐, 🕊️, 💐)
+### Key Services (src/lib/)
+1. **profilesService.ts** - Memorials: CRUD, collaboration, visibility, slug generation
+2. **tributesService.ts** - Tributes: create, list, expire after duration
+3. **likesService.ts** - Toggle likes, counts, user checks
+4. **reactionsService.ts** - 8 emoji reactions (❤️ 😢 🙏 😊 🌹 ⭐ 🕊️ 💐)
 5. **commentsService.ts** - Comments with moderation flags
-6. **tagsService.ts** - Predefined + custom tags (type-based, character-based)
-7. **tributeLikesService.ts** - Likes on tribute tributes
+6. **tagsService.ts** - Predefined + custom tags by pet type + character traits
+7. **tributeLikesService.ts** - Likes on tributes
 8. **tributeReplyService.ts** - Nested replies on tributes
-9. **tributeReportService.ts** - Flag inappropriate tributes
-10. **auth.ts** - Login, register, token verification
-11. **authorization.ts** - Role checks and permissions
+9. **tributeReportService.ts** - Flag inappropriate content
+10. **auth.ts** - Register, login, token generation + verification
+11. **authorization.ts** - Role-based permission checks
+12. **planPermissions.ts** - Subscription tier limits (memorials, tributes, photos)
 
-### Critical Patterns
+---
 
-#### Pattern 1: Data Fetching with Hooks
-- **Examples**: `useProfiles()`, `useLikes()`, `useComments()`
-- **Behavior**: 
-  - Calls corresponding `GET /api/{resource}` 
-  - Caches in component state
-  - Auto-refetch after mutations (e.g., after `toggleLike()`)
-- **Key pattern**: Mutations call refetch function to sync state
+## 💳 Subscription Plans & Permissions
 
-#### Pattern 2: API Route Structure (Protected)
+**Key File**: `src/lib/planPermissions.ts`
+
+### Three Tiers (src/types/index.ts)
 ```typescript
-// src/app/api/{resource}/route.ts - Example: POST likes
-import { verifySessionToken } from '@/lib/auth';
-import { toggleLike } from '@/lib/likesService';
+type SubscriptionTier = 'huella-eterna' | 'cielo-estrellas' | 'santuario-premium';
+```
 
-export async function POST(req: NextRequest) {
-  // 1. Extract token
-  const token = req.headers.get('authorization')?.replace('Bearer ', '');
-  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  
-  // 2. Verify token & get user
-  const { valid, user } = await verifySessionToken(token);
-  if (!valid) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
-  
-  // 3. Check permissions (role-based)
-  if (!user.role.includes('admin')) {
-    // Check subscription tier limits via planPermissions.ts
-  }
-  
-  // 4. Call service
-  const { profileId } = await req.json();
-  const result = await toggleLike(user.id, profileId);
-  
-  return NextResponse.json({ success: true, data: result });
+| Feature | Free | Premium | Pro |
+|---------|------|---------|-----|
+| **Max Memorials** | 1 | 5 | ∞ |
+| **Photos per Memorial** | 1 | 2 | ∞ |
+| **Tribute Types** | 2 (vela, corazón) | 6 | All 7 |
+| **Max Tributes** | 1 | ∞ | ∞ |
+| **Public Profile** | ✅ | ✅ | ✅ |
+| **Marker Size** | small | medium | xlarge |
+| **Highlights/Week** | 0 | 0 | 5 |
+| **Guest Tributes** | ✅ | ✅ | ✅ |
+
+**Check plan limits in API routes**:
+```typescript
+const userPlan = user.subscriptionTier; // 'huella-eterna' etc
+const permissions = PlanPermissionsService.getPermissions(userPlan);
+if (!PlanPermissionsService.canCreateMemorial(userPlan, existingCount)) {
+  return NextResponse.json({ error: 'Limit reached' }, { status: 403 });
 }
 ```
-
-#### Pattern 3: Role-Based Authorization
-```typescript
-// src/lib/authorization.ts
-const hasPermission = (role: UserRole, permission: Permission) => {
-  return ROLE_PERMISSIONS[role]?.includes(permission) || false;
-};
-```
-- **Roles**: `basic` | `premium` | `pro` | `admin` | `moderator`
-- **Permissions**: `create_memorial`, `edit_memorial`, `manage_tributes`, `manage_users`, `moderate_comments`
-- **Source**: `src/types/roles.ts` (ROLE_PERMISSIONS map)
 
 ---
 
@@ -105,105 +89,160 @@ const hasPermission = (role: UserRole, permission: Permission) => {
 ### User (Authentication)
 ```prisma
 model User {
-  id                String
+  id                String @id @default(cuid())
   email             String @unique
   name              String
-  passwordHash      String
-  role              String // "user" | "admin"
-  subscriptionTier  String // "huella-eterna", "cielo-estrellas", "santuario-premium"
+  passwordHash      String (bcryptjs)
   
-  profiles          AnimalProfile[] // Memorials created by user
-  tributes          Tribute[]       // Tributes placed by user
-  likes             Like[]          // Likes given by user
-  reactions         Reaction[]      // Emoji reactions by user
-  comments          Comment[]       // Comments by user
-  sessions          Session[]       // Auth tokens
+  // Subscription
+  subscriptionTier  String // huella-eterna | cielo-estrellas | santuario-premium
+  subscriptionStatus String // active | inactive | expired
+  subscriptionEndDate DateTime?
+  stripeCustomerId  String?
+  
+  // Relations
+  profiles          AnimalProfile[] // Memorials created
+  tributes          Tribute[]       // Tributes left
+  likes             Like[]
+  reactions         Reaction[]
+  comments          Comment[]
+  sessions          Session[]
+  privacySettings   PrivacySettings?
+  
   createdAt         DateTime @default(now())
+}
+
+model Session {
+  id        String @id @default(cuid())
+  userId    String
+  token     String @unique  // Verification key in DB
+  expiresAt DateTime
 }
 ```
 
 ### AnimalProfile (Memorials)
 ```prisma
 model AnimalProfile {
-  id                String @id @default(cuid())
-  userId            String  // Owner
-  name              String
-  animalType        String  // "perro", "gato", "ave", etc.
-  birthDate         DateTime
-  deathDate         DateTime
+  id          String @id @default(cuid())
+  slug        String @unique  // Generated from name, used in URLs
+  userId      String
   
-  latitude          Float   // Map placement
-  longitude         Float
-  photoUrl          String  // Main memorial photo
-  story             String  // Pet's story
-  epitaph           String  // Memorial inscription
-  gallery           String[] // Additional photos
+  name        String
+  animalType  String // perro, gato, ave, roedor, reptil, otro
+  breed       String?
+  birthDate   DateTime
+  deathDate   DateTime
   
-  isPublic          Boolean @default(false)
-  viewCount         Int     @default(0)
+  latitude    Float   // Map location
+  longitude   Float
+  photoUrl    String  // Main photo (must fit tier limits)
+  story       String  // Full memorial text
+  epitaph     String  // Memorial inscription
+  gallery     String[] // Extra photos (tier-dependent)
+  
+  isPublic    Boolean @default(false) // Shown on /map
+  viewCount   Int @default(0)
   
   // Social features
-  tributes          Tribute[]
-  likes             Like[]
-  reactions         Reaction[]
-  comments          Comment[]
-  tags              ProfileTag[]
+  tributes    Tribute[]
+  likes       Like[]
+  reactions   Reaction[]
+  comments    Comment[]
+  tags        ProfileTag[]
   
-  isCollaborative   Boolean @default(false)
-  collaborators     MemorialCollaborator[]
+  // Collaboration
+  isCollaborative Boolean @default(false)
+  collaborators MemorialCollaborator[]
   
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
-```
 
-### Tribute (Visitor Interactions)
-```prisma
 model Tribute {
-  id                String @id @default(cuid())
-  profileId         String  // Which memorial
-  visitorId         String? // If authenticated
-  visitorName       String
-  tributeType       String  // "flower", "candle", "message"
-  message           String?
-  durationDays      Int?    // How long displayed
-  expiresAt         DateTime?
+  id          String @id @default(cuid())
+  profileId   String
   
-  // Nested social
-  likes             TributeLike[]
-  replies           TributeReply[]
-  reports           TributeReport[]
+  visitorName String
+  visitorId   String?  // null = guest
+  tributeType String  // vela-blanca | flor | etc
+  message     String?
   
-  createdAt         DateTime @default(now())
+  durationDays Int?    // Auto-expire after N days
+  expiresAt   DateTime?
+  
+  likes       TributeLike[]
+  replies     TributeReply[]
+  reports     TributeReport[]
+  
+  createdAt   DateTime @default(now())
+}
+
+model Like {
+  id        String @id @default(cuid())
+  userId    String
+  profileId String
+  createdAt DateTime @default(now())
+  @@unique([userId, profileId])
+}
+
+model Reaction {
+  id        String @id @default(cuid())
+  userId    String
+  profileId String
+  emoji     String  // ❤️, 😢, 🙏, etc
+  createdAt DateTime @default(now())
+  @@unique([userId, profileId, emoji])
+}
+
+model Comment {
+  id        String @id @default(cuid())
+  profileId String
+  userId    String?
+  
+  message   String
+  visitorName String?
+  visitorEmail String?
+  isApproved Boolean @default(false)
+  
+  createdAt DateTime @default(now())
 }
 ```
-
-### Social Models
-- **Like**: `{ userId, profileId }` - Memorial likes
-- **Reaction**: `{ userId, profileId, emoji }` - Emoji reactions (8 types)
-- **Comment**: `{ userId, profileId, message, isApproved? }` - Comments with moderation
-- **Tag** + **ProfileTag**: Predefined tags linked to memorials
-- **TributeLike**: Likes on individual tributes
-- **TributeReply**: Replies to tributes
-- **TributeReport**: Flag inappropriate tributes
 
 ### Key Schema Rules
-- All IDs use CUID (auto-generated)
-- Timestamps: `createdAt`, `updatedAt` (auto)
-- DB names: snake_case (`animal_type`, `death_date`)
-- API responses: camelCase (Prisma handles via serialization)
-- **Never query Prisma from components** → always use service layer + API routes
+- All IDs: CUID (auto-generated, URL-safe)
+- Timestamps: `createdAt`, `updatedAt` auto-managed
+- DB column names: snake_case (`animal_type`, `death_date`)
+- API responses: camelCase (Prisma transforms on read)
+- **Never** query Prisma directly from components → always use service layer + API route
 
 ---
 
 ## 🔐 Authentication & Authorization
 
 ### Flow
-1. **Register/Login**: `POST /api/auth/register` or `POST /api/auth/login`
-2. Returns: `{ user, session }` with `session.token` (JWT-like, stored in Session table)
-3. **Frontend**: Stores token in localStorage via `AuthContext`
-4. **API calls**: Include `Authorization: Bearer {token}` header
-5. **Verification**: `verifySessionToken(token)` → returns `{ valid: boolean, user?: User }`
+1. `POST /api/auth/register` or `POST /api/auth/login` with email + password
+2. Returns: `{ user: User, session: { token, expiresAt } }`
+3. Frontend stores `token` in localStorage via `AuthContext`
+4. All API calls include: `Authorization: Bearer {token}` header
+5. Backend verifies: `const result = await verifySessionToken(token)`
+
+### Verification Pattern
+```typescript
+import { verifySessionToken } from '@/lib/auth';
+
+export async function POST(req: NextRequest) {
+  const token = req.cookies.get('auth_token')?.value 
+    || req.headers.get('authorization')?.replace('Bearer ', '');
+  
+  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  
+  const { valid, user } = await verifySessionToken(token);
+  if (!valid) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+  
+  // token is valid, user is populated
+  // ... proceed with business logic
+}
+```
 
 ### Component Usage
 ```typescript
@@ -214,7 +253,6 @@ export function MyComponent() {
   const { user, isAuthenticated, session } = useAuth();
   
   if (!isAuthenticated) return <p>Login required</p>;
-  if (user?.role === 'admin') return <AdminPanel />;
   
   // Make authenticated request
   const response = await fetch('/api/likes', {
@@ -227,101 +265,94 @@ export function MyComponent() {
 
 ### Demo Credentials
 ```
-admin@forever.local / Demo123!  (role: admin, full access)
-demo@forever.local / Demo123!   (role: user, basic tier)
+admin@forever.local / Demo123!  → admin role, full access
+demo@forever.local / Demo123!   → user role, basic tier
 ```
-
-### Roles & Permissions (src/types/roles.ts)
-| Role | Can Create | Can Edit Own | Can Manage Tributes | Can Moderate | Can Manage Users |
-|------|-----------|-------------|-------------------|-------------|-----------------|
-| basic | ✅ 3 memorials | ✅ | ✅ Own | ❌ | ❌ |
-| premium | ✅ 10 memorials | ✅ | ✅ Own | ❌ | ❌ |
-| pro | ✅ Unlimited | ✅ | ✅ Own | ✅ Own tributes | ❌ |
-| admin | ✅ Unlimited | ✅ All | ✅ All | ✅ All | ✅ |
-| moderator | ✅ Unlimited | ✅ Own | ✅ All | ✅ All | ❌ |
 
 ---
 
 ## 📱 Social Features - Implementation Details
 
-### 1. Likes System
-- **File**: `src/lib/likesService.ts` + `POST/GET /api/likes`
+### 1. Likes (src/lib/likesService.ts)
 - **Functions**: `toggleLike()`, `getLikeCount()`, `hasUserLiked()`, `getLikesForProfile()`
-- **Usage**: Button shows count, toggles on click, requires auth
+- **API**: `POST /api/likes` (toggle), `GET /api/likes?profileId={id}` (fetch)
+- **Pattern**: Button shows count, toggles on click, refetch after mutation
 
-### 2. Reactions (Emoji)
-- **File**: `src/lib/reactionsService.ts` + `POST/GET /api/reactions`
-- **8 Emojis**: ❤️, 😢, 🙏, 😊, 🌹, ⭐, 🕊️, 💐
+### 2. Emoji Reactions (src/lib/reactionsService.ts)
+- **8 Emojis**: ❤️ 😢 🙏 😊 🌹 ⭐ 🕊️ 💐
 - **Functions**: `toggleReaction()`, `getReactionCounts()`, `getReactionsForProfile()`
-- **UI**: ReactionsPanel.tsx shows emoji selector + counts
+- **API**: `POST /api/reactions`, `GET /api/reactions?profileId={id}`
+- **Unique constraint**: One emoji per user per profile
 
-### 3. Comments
-- **File**: `src/lib/commentsService.ts` + `POST/GET/DELETE /api/comments`
-- **Features**: Create (auth optional), list, delete (owner/admin), approve (moderator)
+### 3. Comments (src/lib/commentsService.ts)
+- **API**: `POST /api/comments` (create), `GET /api/comments?profileId={id}` (list), `DELETE /api/comments/{id}` (delete)
 - **Fields**: message, visitorName, visitorEmail, isApproved
-- **Usage**: CommentsSection.tsx with form + list
+- **Permissions**: Owner/admin delete, moderator approves
 
-### 4. Tags
-- **File**: `src/lib/tagsService.ts` + `GET/POST/DELETE /api/tags`
-- **Types**: Predefined tags (by pet type, by character: Heroico, Amado, Aventurero, Travieso, Guardián)
-- **Functions**: `createOrGetTag()`, `addTagToProfile()`, `getPopularTags()`, `getProfilesByTag()`
+### 4. Tags (src/lib/tagsService.ts)
+- **Types**: Predefined by pet type (perro, gato, etc) + character traits (Heroico, Amado, Aventurero, Travieso, Guardián)
 - **API query params**: `?action=list|popular|preset|search|profiles`
+- **Functions**: `createOrGetTag()`, `addTagToProfile()`, `getPopularTags()`, `getProfilesByTag()`
 
-### 5. Tributes (Flowers/Candles/Messages)
-- **File**: `src/lib/tributesService.ts` + `POST/GET /api/tributes`
-- **Types**: flower, candle, message
-- **Duration**: 7/14/30 days (auto-expire)
-- **Nested social**: Likes, replies, reports
+### 5. Tributes (src/lib/tributesService.ts)
+- **Types**: vela-blanca, vela-dorada, flor, flor-celestial, corona-flores, corazon
+- **Duration**: 7/14/30 days (auto-expire via `expiresAt`)
+- **Nested**: Likes on tributes, replies to tributes, flag reports
+- **Guests**: Can leave tributes anonymously (visitorId = null)
 
-### 6. Search & Discovery
-- **File**: `GET /api/search?q={query}&type=all|memorial|animal|location&limit=20`
-- **Searches**: Name, story, epitaph, animal type
-- **Location search**: Lat,long → finds nearby memorials
-- **Results**: Return paginated profiles with meta
+### 6. Search (src/app/api/search/route.ts)
+- **Query**: `GET /api/search?q={query}&type=all|memorial|animal|location&limit=20`
+- **Searches**: Memorial name, story, epitaph, animal type
+- **Location**: Pass `lat,long` to find nearby memorials
+- **Results**: Paginated profiles with metadata
 
 ---
 
-## 🎨 UI Conventions & Components
+## 🎨 UI & Component Patterns
 
-### Component Organization
-- **Client Components** (`'use client'`): Forms, interactive elements, state management, hooks usage
-- **Server Components**: Layouts, static content, initial data fetching
-- **UI Library**: shadcn/ui in `src/components/ui/` (use `bunx shadcn@latest add {name}`)
+### Component Structure
+- **Server Components**: Layouts, static content, initial page loads
+- **Client Components** (`'use client'`): Forms, interactive features, state, hooks
+- **UI Library**: shadcn/ui in `src/components/ui/`
+  - Install new: `bunx shadcn@latest add {name}`
 
-### Common Patterns
-
-#### Maps (Leaflet)
+### Leaflet Maps (SSR Hydration Issue)
 ```typescript
-// src/components/InteractiveMap.tsx
-const [mounted, setMounted] = useState(false);
-useEffect(() => setMounted(true), []);
-if (!mounted) return null; // Prevent SSR hydration errors
+'use client';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 
-return (
-  <MapContainer center={[lat, lng]} zoom={13}>
-    <TileLayer url="https://.../tile" />
-    {profiles.map(p => (
-      <Marker key={p.id} position={[p.latitude, p.longitude]} 
-              color={getColorByAnimalType(p.animalType)} />
-    ))}
-  </MapContainer>
-);
+export function MyMap() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  
+  if (!mounted) return null; // Prevent "window is not defined"
+  
+  return (
+    <MapContainer center={[lat, lng]} zoom={13}>
+      <TileLayer url="https://.../tile" />
+      {profiles.map(p => (
+        <Marker position={[p.latitude, p.longitude]} />
+      ))}
+    </MapContainer>
+  );
+}
 ```
 
-#### Forms with File Upload
+### File Upload (FormData)
 ```typescript
 const formData = new FormData();
-formData.append('name', name);
-formData.append('photo', photoFile); // Binary file
+formData.append('name', 'Fluffy');
+formData.append('photo', photoFile); // Binary blob
 
 const response = await fetch('/api/profiles', {
   method: 'POST',
   headers: { 'Authorization': `Bearer ${token}` },
-  body: formData // NOT JSON
+  body: formData  // NOT JSON - browser handles multipart
 });
+// Don't set Content-Type header - browser auto-detects
 ```
 
-#### API Error Handling
+### Error Handling
 ```typescript
 try {
   const res = await fetch('/api/{resource}', { headers });
@@ -329,6 +360,7 @@ try {
   const data = await res.json();
   setData(data);
 } catch (err) {
+  console.error(err);
   setError(err.message);
 }
 ```
@@ -337,88 +369,97 @@ try {
 
 ## 🛠️ Development Workflow
 
-### Setup & Commands
+### Setup & Build
 ```bash
-# Installation
+# Install dependencies
 bun install
-# or
-npm install
+# or: npm install
 
-# Development
-bun run dev          # http://localhost:3000 with Turbopack
-bun run lint         # TypeScript + ESLint
-bunx biome format --write src/  # Format code
+# Start dev server (http://localhost:3000, Turbopack)
+bun run dev
 
-# Database
-npx prisma studio         # GUI to view/edit DB
-npx prisma migrate dev     # Create & run migrations
-npx prisma generate       # Regenerate types (auto after migrate)
+# Check types & linting
+bun run lint
 
-# Build & Deploy
-bun run build        # Production build
-bun run start        # Production server
+# Format code
+bunx biome format --write src/
+
+# Production build
+bun run build
+bun run start
 ```
 
-### Database Workflow
-1. **Add model** to `prisma/schema.prisma`
-2. **Run migration**: `npx prisma migrate dev --name descriptive_name`
-3. **Types auto-generate** (Prisma handles it)
-4. **Update service** with new queries
-5. **Create API route** if exposing endpoint
+### Database Commands
+```bash
+# GUI database browser (modify data directly)
+npx prisma studio
+
+# Create & apply new migration
+npx prisma migrate dev --name descriptive_name
+
+# Reset database (⚠️ destructive)
+npx prisma migrate reset
+
+# Check pending migrations
+npx prisma migrate status
+
+# Generate/regenerate Prisma types (auto after migrate)
+npx prisma generate
+```
 
 ### Common Debugging
 ```bash
-# Check what migrations need running
-npx prisma migrate status
-
-# Reset database (destructive)
-npx prisma migrate reset
-
-# Inspect generated Prisma types
+# Check generated types
 cat node_modules/.prisma/client/index.d.ts
+
+# Read token from browser (dev)
+localStorage.getItem('authToken')
+
+# View database schema
+cat prisma/schema.prisma
 ```
 
 ---
 
-## 📋 Project-Specific Conventions
+## 📋 Project Conventions
 
-### Code Organization
+### File Structure
 ```
 src/
   app/
     api/
-      {resource}/route.ts     # Always POST/GET handlers
-    (routes)/
-      [page]/page.tsx         # App Router pages
+      {resource}/route.ts           # Handler: GET, POST, DELETE
+    {routes}/
+      [dynamic]/page.tsx            # App Router page
   components/
-    {Feature}*.tsx            # Feature-specific UI
-    ui/                       # shadcn/ui components
+    {Feature}*.tsx                  # Feature UI
+    ui/                             # shadcn/ui library
   lib/
-    {resource}Service.ts      # Business logic (likes, comments, etc.)
-    auth.ts                   # Auth + token verification
-    authorization.ts          # Role checks
-    prisma.ts                 # Prisma singleton
+    {resource}Service.ts            # Business logic
+    auth.ts, authorization.ts       # Auth functions
+    prisma.ts                       # Prisma singleton
   types/
-    index.ts                  # Global types
-    roles.ts                  # Role/permission definitions
+    index.ts                        # Global types
+    roles.ts                        # Role definitions
   hooks/
-    use{Feature}.ts           # React hooks for features
+    use{Feature}.ts                 # React hooks
   contexts/
-    AuthContext.tsx           # Global auth state
+    AuthContext.tsx                 # Global auth state
 ```
 
-### Naming Conventions
-- **Files**: camelCase (userService.ts, useProfiles.ts)
-- **Exports**: PascalCase (components), camelCase (functions)
-- **DB fields**: snake_case (`animal_type`, `created_at`)
-- **API responses**: camelCase (`animalType`, `createdAt`)
+### Naming
+- **Files**: camelCase (`profilesService.ts`, `useProfile.ts`)
+- **Functions**: camelCase (`toggleLike`, `getProfiles`)
+- **Components**: PascalCase (`InteractiveMap`, `ProfileCard`)
+- **DB columns**: snake_case (`animal_type`, `birth_date`)
+- **API responses**: camelCase (`{ animalType, birthDate }`)
 - **API routes**: plural/resource names (`/api/profiles`, `/api/tributes`)
 
 ### Error Handling Pattern
 ```typescript
-// Service layer always throws with message
+// Service: throw with descriptive message
 export async function createProfile(userId: string, data: any) {
-  if (!data.name) throw new Error('Name required');
+  if (!data.name) throw new Error('Name is required');
   try {
     return await prisma.animalProfile.create({ data });
   } catch (err: any) {
@@ -426,7 +467,7 @@ export async function createProfile(userId: string, data: any) {
   }
 }
 
-// API route catches and returns JSON
+// API route: catch and return JSON
 try {
   const result = await createProfile(user.id, body);
   return NextResponse.json({ success: true, data: result });
@@ -435,157 +476,91 @@ try {
 }
 ```
 
----
-
-## 🚨 Common Gotchas
-
-### Gotcha 1: Auth Token Missing or Expired
-- **Problem**: API returns 401
-- **Solution**: Verify `useAuth()` returns token, check token not expired in Session table
-- **Debug**: Log token in browser console: `localStorage.getItem('authToken')`
-
-### Gotcha 2: Prisma Type Errors with Dates
-- **Problem**: `birthDate` is string, Prisma expects Date
-- **Solution**: Always parse: `new Date(birthDateStr)`
-- **Pattern**: Service layer handles this transformation
-
-### Gotcha 3: Stale UI After Mutation
-- **Problem**: Add like, but count doesn't update
-- **Solution**: Call refetch function after mutation (already in hooks)
-- **Verify**: Hook has `await fetchLikes()` after `toggleLike()`
-
-### Gotcha 4: SSR Hydration Mismatch
-- **Problem**: "window is not defined" on maps/interactive elements
-- **Solution**: Use `'use client'` + `mounted` state check
+### Service Response Pattern
 ```typescript
-'use client';
-const [mounted, setMounted] = useState(false);
-useEffect(() => setMounted(true), []);
-if (!mounted) return null;
-return <MapContainer>...</MapContainer>;
+// Services return success/error objects:
+{
+  success: true,
+  data: { ... }
+}
+// or
+{
+  success: false,
+  error: 'Description of what went wrong'
+}
 ```
-
-### Gotcha 5: FormData Loses Content-Type
-- **Problem**: Sending FormData, API doesn't parse
-- **Solution**: Don't set `Content-Type` header (browser auto-sets multipart/form-data)
-- **Good**: `fetch(url, { body: formData })` NOT `headers: {'Content-Type': 'application/json'}`
 
 ---
 
-## 🔄 Deployment Checklist
+## 🚨 Gotchas & Solutions
 
-### Pre-Deployment
-- [ ] All tests pass: `bun run lint`
-- [ ] No TypeScript errors
+| Gotcha | Cause | Fix |
+|--------|-------|-----|
+| **401 Unauthorized** | Token missing/expired | Verify `useAuth()` returns token; check Session table expiry |
+| **Prisma type error** | DateTime sent as string | Always parse: `new Date(dateStr)` in service |
+| **UI not updating** | State stale after mutation | Call refetch hook after mutation (already in hooks) |
+| **"window is not defined"** | SSR hydration on maps | Use `'use client'` + `mounted` state check |
+| **FormData not parsing** | Wrong Content-Type header | Don't set header; let browser handle multipart |
+| **Empty profile list** | All profiles private | Set `isPublic: true` when creating for `/map` visibility |
+| **Token in cookies missing** | Not set on login | Login API must set `auth_token` cookie + return token |
+
+---
+
+## 🔄 Deployment & Production
+
+### Pre-Deployment Checklist
+- [ ] `bun run lint` passes (no TS errors)
 - [ ] Database migrations tested locally
-- [ ] Demo credentials work
+- [ ] Demo credentials (`admin@forever.local`, `demo@forever.local`) work
+- [ ] Auth flow tested (register → login → create profile)
+- [ ] Social features tested (like, comment, tribute)
 - [ ] Admin panel accessible to admin role
-- [ ] Social features (likes, comments, reactions) functional
+- [ ] `/map` page loads public profiles correctly
+- [ ] File uploads work (profile photos)
 
-### Environment Variables
-```
-DATABASE_URL=postgresql://... (Neon production instance)
+### Environment Setup
+```bash
+# Production .env
+DATABASE_URL=postgresql://user:pass@neon.tech/db  # Neon PostgreSQL
 NODE_ENV=production
 ```
 
 ### Post-Deployment
 - [ ] Run migrations: `npx prisma migrate deploy`
-- [ ] Verify database connection
-- [ ] Test auth flow with production DB
-- [ ] Check API responses (no dev console logs)
+- [ ] Verify DB connection
+- [ ] Test auth flow against production DB
+- [ ] Check API response headers (no dev logs)
 - [ ] Monitor error logs
-
----
-
-## 🎯 Quick Reference: Adding a New Social Feature
-
-Example: Add "Bookmark Memorial" feature.
-
-1. **Schema** (`prisma/schema.prisma`):
-```prisma
-model Bookmark {
-  id        String @id @default(cuid())
-  userId    String
-  profileId String
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  profile   AnimalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  @@unique([userId, profileId])
-}
-```
-
-2. **Migrate**: `npx prisma migrate dev --name add_bookmarks`
-
-3. **Service** (`src/lib/bookmarksService.ts`):
-```typescript
-export async function toggleBookmark(userId: string, profileId: string) {
-  const existing = await prisma.bookmark.findUnique({
-    where: { userId_profileId: { userId, profileId } }
-  });
-  if (existing) {
-    return await prisma.bookmark.delete({ where: { id: existing.id } });
-  }
-  return await prisma.bookmark.create({ data: { userId, profileId } });
-}
-```
-
-4. **API** (`src/app/api/bookmarks/route.ts`):
-```typescript
-export async function POST(req: NextRequest) {
-  const token = req.headers.get('authorization')?.replace('Bearer ', '');
-  const { valid, user } = await verifySessionToken(token);
-  if (!valid) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { profileId } = await req.json();
-  const result = await toggleBookmark(user.id, profileId);
-  return NextResponse.json({ success: true, data: result });
-}
-```
-
-5. **Hook** (`src/hooks/useBookmarks.ts`):
-```typescript
-export function useBookmarks() {
-  const { session } = useAuth();
-  async function toggleBookmark(profileId: string) {
-    const response = await fetch('/api/bookmarks', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${session?.token}` },
-      body: JSON.stringify({ profileId })
-    });
-    return response.json();
-  }
-  return { toggleBookmark };
-}
-```
-
-6. **Component**: Import `useBookmarks()` and add button.
 
 ---
 
 ## 📚 Key Files by Feature
 
-| Feature | Files |
-|---------|-------|
-| **Memorials** | `src/lib/profilesService.ts`, `src/app/api/profiles/route.ts`, `/create` page |
-| **Tributes** | `src/lib/tributesService.ts`, `src/app/api/tributes/route.ts` |
-| **Likes** | `src/lib/likesService.ts`, `src/app/api/likes/route.ts` |
-| **Reactions** | `src/lib/reactionsService.ts`, `src/app/api/reactions/route.ts` |
-| **Comments** | `src/lib/commentsService.ts`, `src/app/api/comments/route.ts` |
-| **Tags** | `src/lib/tagsService.ts`, `src/app/api/tags/route.ts` |
-| **Auth** | `src/lib/auth.ts`, `src/contexts/AuthContext.tsx`, `src/app/api/auth/*` |
-| **Search** | `src/app/api/search/route.ts` |
-| **Admin** | `src/app/api/admin/*`, `/admin` page |
+| Feature | Service | API Route | Page |
+|---------|---------|-----------|------|
+| **Memorials** | `profilesService.ts` | `/api/profiles/route.ts` | `/create`, `/memorial/[slug]` |
+| **Tributes** | `tributesService.ts` | `/api/tributes/route.ts` | (widget) |
+| **Likes** | `likesService.ts` | `/api/likes/route.ts` | (button) |
+| **Reactions** | `reactionsService.ts` | `/api/reactions/route.ts` | (panel) |
+| **Comments** | `commentsService.ts` | `/api/comments/route.ts` | (section) |
+| **Tags** | `tagsService.ts` | `/api/tags/route.ts` | `/trending`, search |
+| **Auth** | `auth.ts` | `/api/auth/[...]/route.ts` | `/auth/login`, `/auth/register` |
+| **Search** | - | `/api/search/route.ts` | `/search` |
+| **Admin** | - | `/api/admin/*/route.ts` | `/admin` |
 
 ---
 
-## ✅ Implementation Checklist Before Pushing
+## ✅ Feature Implementation Checklist
 
-- [ ] Service function written + error handling
-- [ ] API route created with auth verification
-- [ ] Hook created for component usage
-- [ ] Component client-side logic implemented
-- [ ] Types added to `src/types/index.ts` if needed
-- [ ] Test in dev locally (create, read, update, delete)
-- [ ] Test with both authenticated and guest users
-- [ ] Check role permissions if applicable
-- [ ] Format code: `bunx biome format --write src/`
-- [ ] No TypeScript errors: `bun run lint`
+When adding a new feature (e.g., bookmarks):
+
+- [ ] Add schema to `prisma/schema.prisma`
+- [ ] Run: `npx prisma migrate dev --name add_bookmarks`
+- [ ] Create `src/lib/bookmarksService.ts` with functions
+- [ ] Create `src/app/api/bookmarks/route.ts` with auth + permissions
+- [ ] Create `src/hooks/useBookmarks.ts` for component usage
+- [ ] Add types to `src/types/index.ts`
+- [ ] Test locally (CRUD, auth, permissions)
+- [ ] Format: `bunx biome format --write src/`
+- [ ] Verify: `bun run lint` (no TS errors)
+- [ ] Push to git

@@ -67,7 +67,7 @@ export default function PricingPage() {
         alert('Error: ' + (data.error || 'No se pudo procesar el pago'));
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error al procesar el pago:', error);
       alert('Error al procesar el pago');
     } finally {
       setLoading(null);
