@@ -1,21 +1,92 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PLANS } from '@/types/index';
+import { PLANS } from '@/lib/stripe';
+import { getAuthToken } from '@/lib/auth-client';
 
 export default function UserSubscriptionPage() {
-  // Datos simulados - en producción vendría de la BD
-  const [userPlan] = useState<'huella-eterna' | 'cielo-estrellas' | 'santuario-premium'>('cielo-estrellas');
+  const router = useRouter();
+  const [userPlan, setUserPlan] = useState<'huella-eterna' | 'cielo-estrellas' | 'santuario-premium'>('huella-eterna');
+  const [loading, setLoading] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
 
-  const currentPlan = PLANS[userPlan];
-  const nextPlan = userPlan === 'huella-eterna' 
-    ? PLANS['cielo-estrellas']
-    : userPlan === 'cielo-estrellas'
-    ? PLANS['santuario-premium']
-    : null;
+  // Fetch current user data
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token) {
+      fetch('/api/subscription-status', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.data.user) {
+            setUserPlan(data.data.user.planType || 'huella-eterna');
+            setUser(data.data.user);
+          }
+        })
+        .catch((err) => console.error('Error:', err));
+    }
+  }, []);
+
+  const handleSelectPlan = async (planId: string) => {
+    const token = getAuthToken();
+
+    if (!token) {
+      router.push(`/auth/login?redirect=/user/subscription&plan=${planId}`);
+      return;
+    }
+
+    if (planId === userPlan) {
+      return; // Ya tiene este plan
+    }
+
+    setLoading(planId);
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ planId }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        if (data.sessionUrl) {
+          // Redirigir a Stripe Checkout
+          window.location.href = data.sessionUrl;
+        } else if (data.planType === 'free') {
+          // Plan gratuito activado
+          alert('¡Plan activado exitosamente!');
+          setUserPlan('huella-eterna');
+          router.refresh();
+        }
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo procesar el pago'));
+      }
+    } catch (error) {
+      console.error('Error al procesar el pago:', error);
+      alert('Error al procesar el pago');
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const currentPlan = Object.values(PLANS).find(p => p.id === userPlan) || Object.values(PLANS)[0];
+  const planArray = Object.values(PLANS);
+
+  const planEmojis: Record<string, string> = {
+    'huella-eterna': '🐾',
+    'cielo-estrellas': '🕯️',
+    'santuario-premium': '👑',
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 py-8 px-4">
@@ -34,18 +105,19 @@ export default function UserSubscriptionPage() {
             {/* Current Plan Card */}
             <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
               <div className="text-center mb-6">
-                <div className="text-4xl mb-2">{currentPlan.emoji}</div>
+                <div className="text-4xl mb-2">{planEmojis[currentPlan.id]}</div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {currentPlan.emotionalName.split(' ').slice(1).join(' ')}
+                  {currentPlan.name}
                 </h2>
               </div>
 
               <div className="text-center py-4 border-y border-sky-200 mb-4">
-                {currentPlan.priceOneTime > 0 ? (
+                {currentPlan.price > 0 ? (
                   <div>
-                    <p className="text-sm text-gray-600">Pagado el 15 Oct 2025</p>
+                    <p className="text-sm text-gray-600">Plan activo</p>
                     <p className="text-2xl font-bold text-sky-600 mt-1">
-                      {currentPlan.priceOneTime}€ (pago único)
+                      {currentPlan.priceDisplay}
+                      <span className="text-sm text-gray-600 font-normal ml-2">Pago único</span>
                     </p>
                   </div>
                 ) : (
@@ -69,13 +141,24 @@ export default function UserSubscriptionPage() {
                 Ver todos los beneficios
               </Button>
 
-              {nextPlan && (
-                <Link href="/plans" className="block">
-                  <Button className="w-full bg-golden-500 text-white hover:bg-golden-600">
-                    Actualizar a {nextPlan.emotionalName.split(' ').slice(1).join(' ')}
-                  </Button>
-                </Link>
-              )}
+              <div className="space-y-2">
+                {planArray.map((plan) => (
+                  plan.id !== userPlan && (
+                    <Button
+                      key={plan.id}
+                      onClick={() => handleSelectPlan(plan.id)}
+                      disabled={loading === plan.id}
+                      className="w-full bg-golden-500 text-white hover:bg-golden-600"
+                    >
+                      {loading === plan.id ? (
+                        'Procesando...'
+                      ) : (
+                        `Actualizar a ${plan.name}`
+                      )}
+                    </Button>
+                  )
+                ))}
+              </div>
             </Card>
 
             {/* Account Settings */}
