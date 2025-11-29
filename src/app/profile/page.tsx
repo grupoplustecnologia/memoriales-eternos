@@ -260,7 +260,7 @@ export default function ProfilePage() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-nature-600">{myMemorials.length}</p>
                   <p className="text-xs text-muted-foreground">Memoriales</p>
@@ -268,10 +268,6 @@ export default function ProfilePage() {
                 <div className="text-center">
                   <p className="text-2xl font-bold text-sky-600">{tributes.length}</p>
                   <p className="text-xs text-muted-foreground">Tributos</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-golden-600">{myMemorials.filter(m => m.isFavorite).length}</p>
-                  <p className="text-xs text-muted-foreground">Favoritos</p>
                 </div>
               </div>
             </div>
@@ -384,40 +380,7 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
 
-              {/* Favorite Memorials */}
-              {myMemorials.filter(m => m.isFavorite).length > 0 && (
-                <Card className="border-nature-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <span>⭐ Memoriales Favoritos</span>
-                      <Badge variant="outline">{myMemorials.filter(m => m.isFavorite).length}</Badge>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {myMemorials.filter(m => m.isFavorite).map(memorial => (
-                        <Link key={memorial.id} href={`/profile/${memorial.id}`}>
-                          <Card className="cursor-pointer hover:shadow-lg transition-shadow border-sky-100 bg-sky-50">
-                            <CardContent className="pt-4">
-                              <img
-                                src={memorial.photoUrl}
-                                alt={memorial.name}
-                                className="w-full h-40 object-cover rounded-lg mb-3"
-                              />
-                              <h3 className="font-bold text-nature-800">{memorial.name}</h3>
-                              <p className="text-sm text-muted-foreground mb-2 capitalize">{memorial.animalType}</p>
-                              <div className="flex items-center justify-between text-xs">
-                                <span className="text-muted-foreground">{new Date(memorial.createdAt).toLocaleDateString()}</span>
-                                <span className="text-golden-600">🎁 {memorial.tributes} tributos</span>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </Link>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+              {/* Favorite Memorials - Hidden for now */}
             </div>
           )}
 
