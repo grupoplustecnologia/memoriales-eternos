@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       await prisma.user.update({
         where: { id: userId },
         data: {
-          planType: plan.id,
+          subscriptionTier: plan.id,
           subscriptionStatus: 'active',
           subscriptionId: session.id,
           subscriptionEndDate: endDate,

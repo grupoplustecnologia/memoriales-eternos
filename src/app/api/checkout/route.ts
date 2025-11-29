@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       await prisma.user.update({
         where: { id: dbUser.id },
         data: {
-          planType: 'free',
+          subscriptionTier: 'huella-eterna',
           subscriptionStatus: 'active',
           subscriptionEndDate: null,
         },
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: 'Plan actualizado exitosamente',
-        planType: 'free',
+        planType: 'huella-eterna',
       });
     }
 

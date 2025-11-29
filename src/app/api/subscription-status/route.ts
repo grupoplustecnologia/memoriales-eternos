@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         id: true,
         email: true,
         name: true,
-        planType: true,
+        subscriptionTier: true,
         subscriptionStatus: true,
         subscriptionEndDate: true,
         stripeCustomerId: true,
@@ -46,14 +46,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const limits = getPlanLimits(user.planType);
+    const limits = getPlanLimits(user.subscriptionTier);
 
     return NextResponse.json({
       success: true,
       data: {
         user,
         plan: {
-          type: user.planType,
+          type: user.subscriptionTier,
           status: user.subscriptionStatus,
           endDate: user.subscriptionEndDate,
           limits,
