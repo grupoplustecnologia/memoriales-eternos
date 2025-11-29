@@ -33,10 +33,10 @@ interface TributeCounts {
 }
 
 const TRIBUTE_TYPES = [
-  { id: 'flower', label: 'Flor', emoji: '🌹', color: 'bg-pink-100 text-pink-800', animation: 'animate-bounce' },
-  { id: 'candle', label: 'Vela', emoji: '🕯️', color: 'bg-yellow-100 text-yellow-800', animation: 'animate-pulse' },
-  { id: 'heart', label: 'Corazón', emoji: '❤️', color: 'bg-red-100 text-red-800', animation: 'animate-bounce' },
-  { id: 'angel', label: 'Ángel', emoji: '😇', color: 'bg-blue-100 text-blue-800', animation: 'animate-pulse' },
+  { id: 'flower', label: 'Flor', emoji: '🌹', color: 'bg-pink-100 text-pink-800', animation: 'animate-bounce', backendType: 'flor' },
+  { id: 'candle', label: 'Vela', emoji: '🕯️', color: 'bg-yellow-100 text-yellow-800', animation: 'animate-pulse', backendType: 'vela-blanca' },
+  { id: 'heart', label: 'Corazón', emoji: '❤️', color: 'bg-red-100 text-red-800', animation: 'animate-bounce', backendType: 'corazon' },
+  { id: 'angel', label: 'Ángel', emoji: '😇', color: 'bg-blue-100 text-blue-800', animation: 'animate-pulse', backendType: 'angel' },
 ];
 
 export default function TributesSection({ memorialId }: { memorialId: string }) {
@@ -137,7 +137,9 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
         body: JSON.stringify({
           profileId: memorialId,
           visitorName: isAnonymous ? 'Anónimo' : tributeAuthor,
-          tributeType: selectedTributeType === 'heart' ? 'message' : selectedTributeType,
+          tributeType: selectedTributeType === 'heart' 
+            ? 'corazon'  // Mapear 'heart' a 'corazon'
+            : TRIBUTE_TYPES.find(t => t.id === selectedTributeType)?.backendType || selectedTributeType,
           message: tributeMessage,
         }),
       });
