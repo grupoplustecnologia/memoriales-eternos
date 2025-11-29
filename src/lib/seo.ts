@@ -490,6 +490,126 @@ export const generateSitemapUrls = (profiles?: Array<{ id: string; updatedAt?: s
       loc: `${baseUrl}/registrar-gato-cementerio-virtual`,
       changefreq: 'weekly',
       priority: 0.85
+    },
+    // PHASE 5: Spain-Wide Pages
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas-espana`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-perros-espana`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-gatos-espana`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    // PHASE 5: City-Based Cementerio Mascotas Pages
+    {
+      loc: `${baseUrl}/cementerio-mascotas-madrid-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-barcelona-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-valencia-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-sevilla-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-zaragoza-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-malaga-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-murcia-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-bilbao-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-alicante-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-mascotas-valladolid-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    // PHASE 5: City Virtual Mascotas Pages
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas-madrid`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas-barcelona`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas-valencia`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas-sevilla`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas-zaragoza`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    // PHASE 5: Species + City Pages
+    {
+      loc: `${baseUrl}/cementerio-virtual-perros-madrid`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-gatos-madrid`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-perros-barcelona`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-gatos-barcelona`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    // PHASE 5: Location-Based Page
+    {
+      loc: `${baseUrl}/cementerio-mascotas-cerca-de-mi`,
+      changefreq: 'weekly',
+      priority: 0.85
     }
   ];
 

@@ -423,4 +423,152 @@
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+
+  <!-- PHASE 5: Páginas España-Wide -->
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-mascotas-espana</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-perros-espana</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-gatos-espana</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- PHASE 5: Páginas Cementerio Mascotas por Ciudad -->
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-madrid-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-barcelona-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-valencia-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-sevilla-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-zaragoza-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-malaga-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-murcia-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-bilbao-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-alicante-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-valladolid-online</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- PHASE 5: Páginas Virtual Mascotas por Ciudad -->
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-mascotas-madrid</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-mascotas-barcelona</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-mascotas-valencia</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-mascotas-sevilla</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-mascotas-zaragoza</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- PHASE 5: Páginas Especie + Ciudad -->
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-perros-madrid</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-gatos-madrid</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-perros-barcelona</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-virtual-gatos-barcelona</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- PHASE 5: Página Ubicación-Based -->
+  <url>
+    <loc>https://foreverpetfriend.com/cementerio-mascotas-cerca-de-mi</loc>
+    <lastmod>2025-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
 </urlset>
