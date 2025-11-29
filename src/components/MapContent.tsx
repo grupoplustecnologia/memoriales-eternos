@@ -180,12 +180,14 @@ export function MapContent({
 
         {profiles.map((profile) => {
           const isSelected = selectedProfile === profile.id;
+          // Use 'huella-eterna' as default if userSubscriptionTier is not defined
+          const userPlan = profile.userSubscriptionTier || 'huella-eterna';
 
           return (
             <Marker
               key={profile.id}
               position={[profile.latitude, profile.longitude]}
-              icon={createCustomIcon(profile.animalType, isSelected, profile.userSubscriptionTier)}
+              icon={createCustomIcon(profile.animalType, isSelected, userPlan)}
               eventHandlers={{
                 click: () => {
                   if (onProfileSelect) {
