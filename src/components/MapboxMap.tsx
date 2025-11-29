@@ -69,13 +69,14 @@ export default function MapboxMap({
   };
 
   // Función para crear marker personalizado moderno
-  const createFlagMarker = (animalType: string, isPremium: boolean, photoUrl?: string) => {
+  // Función para crear marker personalizado por plan
+  const createFlagMarker = (animalType: string, userPlan?: string, photoUrl?: string) => {
     const el = document.createElement('div');
     const color = animalColors[animalType] || '#6366f1';
     const icon = animalIcons[animalType] || '🐾';
     
-    if (isPremium && photoUrl) {
-      // Premium: Tarjeta moderna con foto circular
+    // Premium Pro: Foto circular con foto
+    if (userPlan === 'santuario-premium' && photoUrl) {
       el.innerHTML = `
         <div style="
           position: relative;
@@ -88,8 +89,22 @@ export default function MapboxMap({
           filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         "
-        onmouseover="this.style.transform='scale(1.15) translateY(-8px)'; this.style.filter='drop-shadow(0 12px 24px rgba(0, 0, 0, 0.25))'"
+        onmouseover="this.style.transform='scale(1.15) translateY(-8px)'; this.style.filter='drop-shadow(0 12px 24px rgba(239, 68, 68, 0.3))'"
         onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15))'">
+          <!-- Red background circle for Premium Pro -->
+          <div style="
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            background-color: #fee2e2;
+            border: 2px solid #ef4444;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+            z-index: 1;
+          "></div>
           <!-- Glow background -->
           <div style="
             position: absolute;
@@ -97,7 +112,7 @@ export default function MapboxMap({
             height: 56px;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), transparent);
             border-radius: 50%;
-            z-index: 1;
+            z-index: 2;
           "></div>
           <!-- Foto circular premium -->
           <img src="${photoUrl}" alt="memorial" style="
@@ -107,7 +122,7 @@ export default function MapboxMap({
             object-fit: cover;
             border: 3px solid white;
             box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.1);
-            z-index: 2;
+            z-index: 3;
           "/>
           <!-- Badge premium -->
           <div style="
@@ -123,12 +138,64 @@ export default function MapboxMap({
             justify-content: center;
             font-size: 12px;
             border: 2px solid white;
-            z-index: 3;
-          ">⭐</div>
+            z-index: 4;
+          ">👑</div>
         </div>
       `;
-    } else {
-      // Diseño moderno para usuarios regulares - tarjeta minimalista
+    }
+    // Cielo de Estrellas: Cuadrado con borde azul y estrella
+    else if (userPlan === 'cielo-estrellas') {
+      el.innerHTML = `
+        <div style="
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 56px;
+          height: 56px;
+          cursor: pointer;
+          filter: drop-shadow(0 4px 12px rgba(6, 182, 212, 0.3));
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        "
+        onmouseover="this.style.transform='scale(1.2)'; this.style.filter='drop-shadow(0 6px 16px rgba(6, 182, 212, 0.5))'"
+        onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 4px 12px rgba(6, 182, 212, 0.3))'">
+          <!-- Square background with gradient -->
+          <div style="
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, ${color}, rgba(14, 165, 233, 0.3));
+            border-radius: 8px;
+            z-index: 1;
+          "></div>
+          <!-- Cyan border -->
+          <div style="
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            border: 3px solid #0ea5e9;
+            border-radius: 8px;
+            box-shadow: inset 0 0 12px rgba(14, 165, 233, 0.2);
+            z-index: 2;
+          "></div>
+          <!-- Star icon -->
+          <div style="
+            font-size: 28px;
+            z-index: 3;
+            text-shadow: 0 2px 4px rgba(6, 182, 212, 0.3);
+            animation: pulse-star 2s infinite;
+          ">⭐</div>
+          <style>
+            @keyframes pulse-star {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.1); }
+            }
+          </style>
+        </div>
+      `;
+    }
+    // Gratuito: Teardrop con emoji (default)
+    else {
       const darkerColor = adjustColor(color, -20);
       el.innerHTML = `
         <div style="
@@ -252,10 +319,8 @@ export default function MapboxMap({
 
       // Add new markers
       markers.forEach((marker) => {
-        const isPremium = marker.userSubscriptionTier === 'santuario-premium';
-        
         // Crear elemento personalizado para el marcador
-        const el = createFlagMarker(marker.animalType, isPremium, marker.photoUrl);
+        const el = createFlagMarker(marker.animalType, marker.userSubscriptionTier, marker.photoUrl);
 
         // Crear popup con tarjeta del animal
         const popupHTML = `
