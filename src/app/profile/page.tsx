@@ -270,7 +270,7 @@ export default function ProfilePage() {
                   <p className="text-xs text-muted-foreground">Tributos</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-golden-600">{favoriteMemorials.length}</p>
+                  <p className="text-2xl font-bold text-golden-600">{myMemorials.filter(m => m.isFavorite).length}</p>
                   <p className="text-xs text-muted-foreground">Favoritos</p>
                 </div>
               </div>
