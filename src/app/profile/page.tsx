@@ -138,9 +138,9 @@ export default function ProfilePage() {
   };
 
   const getPlanName = () => {
-    if (user?.planType === 'huella-eterna') return 'Gratuito';
-    if (user?.planType === 'cielo-estrellas') return 'Cielo de Estrellas';
-    if (user?.planType === 'santuario-premium') return 'Santuario Premium';
+    if (user?.subscriptionTier === 'huella-eterna') return 'Gratuito';
+    if (user?.subscriptionTier === 'cielo-estrellas') return 'Cielo de Estrellas';
+    if (user?.subscriptionTier === 'santuario-premium') return 'Santuario Premium';
     return 'Gratuito';
   };
 
@@ -605,7 +605,7 @@ export default function ProfilePage() {
                     <p className="font-bold text-lg text-nature-800 mb-4">
                       👑 {getPlanName()}
                     </p>
-                    {user?.planType && user?.planType !== 'huella-eterna' && (
+                    {user?.subscriptionTier && user?.subscriptionTier !== 'huella-eterna' && (
                       <div className="space-y-2 mb-4 text-sm">
                         <p>✅ Plan Premium activado</p>
                         <p>✅ Almacenamiento extendido</p>
@@ -616,14 +616,14 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="space-y-3">
-                    {user?.planType === 'huella-eterna' && (
+                    {user?.subscriptionTier === 'huella-eterna' && (
                       <Link href="/pricing">
                         <Button className="w-full bg-nature-600 hover:bg-nature-700">
                           Mejorar a Plan Premium
                         </Button>
                       </Link>
                     )}
-                    {user?.planType && user?.planType !== 'huella-eterna' && (
+                    {user?.subscriptionTier && user?.subscriptionTier !== 'huella-eterna' && (
                       <p className="text-sm text-muted-foreground text-center">
                         Tienes un plan premium activo
                       </p>
