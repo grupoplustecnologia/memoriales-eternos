@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
@@ -9,6 +10,7 @@ import Link from 'next/link';
 function CheckoutSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
@@ -41,6 +43,8 @@ function CheckoutSuccessContent() {
         if (data.success) {
           setPlan(planId);
           setSuccess(true);
+          // Refresh user data from database to get updated subscription tier
+          await refreshUser();
         } else {
           setError(data.message || 'No pudimos verificar tu pago');
         }

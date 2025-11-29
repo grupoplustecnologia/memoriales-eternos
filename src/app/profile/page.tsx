@@ -36,7 +36,7 @@ interface ActivityLog {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated, updateProfile, logout } = useAuth();
+  const { user, isAuthenticated, updateProfile, logout, refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState<'info' | 'memorials' | 'tributes' | 'activity' | 'settings'>('info');
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -48,6 +48,11 @@ export default function ProfilePage() {
   const [tributes, setTributes] = useState<Tribute[]>([]);
   const [activityLog, setActivityLog] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Refresh user data on component mount
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
 
   // Cargar datos reales del usuario
   useEffect(() => {

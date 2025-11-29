@@ -9,13 +9,16 @@ import Link from 'next/link';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, refreshUser } = useAuth();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push('/auth/login?redirect=/dashboard');
+    } else if (isAuthenticated) {
+      // Refresh user data to ensure we have latest subscription info
+      refreshUser();
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isLoading, router, refreshUser]);
 
   if (isLoading) {
     return (
