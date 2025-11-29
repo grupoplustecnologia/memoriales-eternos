@@ -346,6 +346,88 @@ export const generateSitemapUrls = (profiles?: Array<{ id: string; updatedAt?: s
       loc: `${baseUrl}/cementerio-virtual-perros-gatos`,
       changefreq: 'weekly',
       priority: 0.85
+    },
+    // Phase 3 - Memorial Online Pages
+    {
+      loc: `${baseUrl}/memorial-cachorros-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-mascotas-exoticas-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-conejos-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-hamsters-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-cobayas-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-loros-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-pajaros-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-hurones-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-tortugas-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    // Phase 3 - Homenaje Virtual Pages
+    {
+      loc: `${baseUrl}/homenaje-virtual-mascotas`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/homenaje-virtual-perros`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/homenaje-virtual-gatos`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/homenaje-virtual-mascotas-exoticas`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/homenaje-virtual-mi-perro`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/homenaje-virtual-mi-gato`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/homenaje-virtual-mi-mascota`,
+      changefreq: 'weekly',
+      priority: 0.85
     }
   ];
 
