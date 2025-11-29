@@ -91,8 +91,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear sesión de checkout de Stripe
-    // Usar localhost en lugar de 0.0.0.0 para evitar errores de redirección
-    const origin = request.nextUrl.origin.replace('0.0.0.0', 'localhost');
+    // Usar dominio custom si está disponible, sino usar localhost para desarrollo
+    let origin = process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin;
+    origin = origin.replace('0.0.0.0', 'localhost');
+    
     const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&plan=${planId}`;
     const cancelUrl = `${origin}/pricing`;
 
