@@ -72,9 +72,7 @@ export default function MapboxMap({
   // Función para agrupar marcadores cercanos
   const clusterNearbyMarkers = (markersList: typeof markers) => {
     const clustered: Array<{
-      originalMarkers: typeof markers;
-      center: { lng: number; lat: number };
-      offsetPositions: Array<{ lng: number; lat: number; index: number }>;
+      markers: Array<{ marker: typeof markers[0]; offsetPos: { lng: number; lat: number } }>;
     }> = [];
     const processed = new Set<number>();
     const PROXIMITY_THRESHOLD = 0.0005; // ~50 metros en coordenadas
@@ -82,7 +80,7 @@ export default function MapboxMap({
     markersList.forEach((marker, idx) => {
       if (processed.has(idx)) return;
 
-      const nearby = [idx];
+      const nearby: number[] = [idx];
       processed.add(idx);
 
       // Buscar marcadores cercanos
@@ -100,32 +98,31 @@ export default function MapboxMap({
         }
       });
 
-      // Si solo hay un marcador, agregar sin offset
-      if (nearby.length === 1) {
-        clustered.push({
-          originalMarkers: [markersList[idx]],
-          center: { lng: marker.lng, lat: marker.lat },
-          offsetPositions: [{ lng: marker.lng, lat: marker.lat, index: 0 }],
-        });
-      } else {
-        // Crear patrón circular para múltiples marcadores
-        const offsetPositions = nearby.map((markerIdx, position) => {
+      // Crear posiciones offset para los marcadores cercanos
+      const clusterMarkers = nearby.map((markerIdx, position) => {
+        const markerData = markersList[markerIdx];
+        
+        if (nearby.length === 1) {
+          // Un solo marcador: posición exacta
+          return {
+            marker: markerData,
+            offsetPos: { lng: markerData.lng, lat: markerData.lat },
+          };
+        } else {
+          // Múltiples marcadores: distribuir en círculo
           const angle = (position / nearby.length) * Math.PI * 2;
           const radius = 0.0002; // ~20 metros
-
           return {
-            lng: marker.lng + radius * Math.cos(angle),
-            lat: marker.lat + radius * Math.sin(angle),
-            index: markerIdx,
+            marker: markerData,
+            offsetPos: {
+              lng: marker.lng + radius * Math.cos(angle),
+              lat: marker.lat + radius * Math.sin(angle),
+            },
           };
-        });
+        }
+      });
 
-        clustered.push({
-          originalMarkers: nearby.map(idx => markersList[idx]),
-          center: { lng: marker.lng, lat: marker.lat },
-          offsetPositions,
-        });
-      }
+      clustered.push({ markers: clusterMarkers });
     });
 
     return clustered;
@@ -444,17 +441,7 @@ export default function MapboxMap({
 
       // Add new markers with clustering
       clusteredMarkers.forEach((cluster) => {
-        cluster.offsetPositions.forEach((offsetPos) => {
-          const markerData = markers.find(m => 
-            m.lng === cluster.originalMarkers[0].lng && 
-            m.lat === cluster.originalMarkers[0].lat
-          );
-          
-          // Encontrar el marcador correcto por índice en el cluster
-          const actualMarker = cluster.originalMarkers[offsetPos.index];
-          
-          if (!actualMarker) return;
-
+        cluster.markers.forEach(({ marker: actualMarker, offsetPos }) => {
           // Crear elemento personalizado para el marcador
           const el = createFlagMarker(
             actualMarker.animalType, 
