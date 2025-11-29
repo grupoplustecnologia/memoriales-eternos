@@ -6,7 +6,7 @@
 
 ---
 
-## 📊 Estructura General del Sitio
+## 📊 ESTRUCTURA GENERAL DEL SITIO
 
 ```
 🏠 foreverpetfriend.com/
@@ -30,24 +30,6 @@
 │   ├── /subscription (Suscripción)
 │   ├── /user/subscription (Mi Suscripción)
 │   └── /checkout/success (Confirmación Pago)
-│
-├── 🐾 TIPOS DE MASCOTAS
-│   ├── /pet-types (Todos los Tipos)
-│   ├── /pet-types/dogs (Perros)
-│   ├── /pet-types/cats (Gatos)
-│   ├── /pet-types/birds (Pájaros)
-│   ├── /pet-types/rabbits (Conejos)
-│   ├── /pet-types/hamsters (Hámsters)
-│   ├── /pet-types/ferrets (Hurones)
-│   └── /pet-types/small-mammals (Pequeños Mamíferos)
-│
-├── 🛠️ SERVICIOS
-│   ├── /services (Todos los Servicios)
-│   ├── /services/free (Servicios Gratuitos)
-│   ├── /services/generic (Servicios Genéricos)
-│   ├── /services/online (Servicios Online)
-│   ├── /services/digital (Servicios Digitales)
-│   └── /services/deceased (Servicios para Fallecidos)
 │
 ├── ⭐ ESPECIAL
 │   └── /trending (Trending - Destacados)
@@ -100,28 +82,6 @@
 | /user/subscription | Detalles de Suscripción | ⭐⭐⭐⭐ | Weekly |
 | /checkout/success | Confirmación de Pago | ⭐⭐⭐ | Monthly |
 
-### 🐾 TIPOS DE MASCOTAS (8 páginas)
-| URL | Descripción | Prioridad | Cambio |
-|-----|-------------|-----------|--------|
-| /pet-types | Centro de Tipos de Mascotas | ⭐⭐⭐⭐ | Monthly |
-| /pet-types/dogs | Memoriales de Perros 🐕 | ⭐⭐⭐⭐ | Weekly |
-| /pet-types/cats | Memoriales de Gatos 🐱 | ⭐⭐⭐⭐ | Weekly |
-| /pet-types/birds | Memoriales de Pájaros 🦅 | ⭐⭐⭐ | Weekly |
-| /pet-types/rabbits | Memoriales de Conejos 🐰 | ⭐⭐⭐ | Weekly |
-| /pet-types/hamsters | Memoriales de Hámsters 🐹 | ⭐⭐⭐ | Weekly |
-| /pet-types/ferrets | Memoriales de Hurones 🦝 | ⭐⭐⭐ | Weekly |
-| /pet-types/small-mammals | Pequeños Mamíferos 🐭 | ⭐⭐⭐ | Weekly |
-
-### 🛠️ SERVICIOS (6 páginas)
-| URL | Descripción | Prioridad | Cambio |
-|-----|-------------|-----------|--------|
-| /services | Centro de Servicios | ⭐⭐⭐⭐ | Monthly |
-| /services/free | Servicios Gratuitos | ⭐⭐⭐ | Monthly |
-| /services/generic | Servicios Genéricos | ⭐⭐⭐ | Monthly |
-| /services/online | Servicios Online | ⭐⭐⭐ | Monthly |
-| /services/digital | Servicios Digitales | ⭐⭐⭐ | Monthly |
-| /services/deceased | Servicios Especiales | ⭐⭐⭐ | Monthly |
-
 ### ⭐ ESPECIAL (1 página)
 | URL | Descripción | Prioridad | Cambio |
 |-----|-------------|-----------|--------|
@@ -151,8 +111,8 @@
 
 | Métrica | Valor |
 |---------|-------|
-| **Total de Páginas** | 38 |
-| **Páginas Públicas** | 37 |
+| **Total de Páginas** | 24 |
+| **Páginas Públicas** | 23 |
 | **Páginas Restringidas** | 1 (/admin) |
 | **Páginas Dinámicas** | 2 (/profile/[id], /memorial/[slug]) |
 | **Última Actualización** | 29 Nov 2025 |
@@ -247,13 +207,6 @@ Home (/)
 │
 ├─→ Trending (/trending)
 │   └─→ Memorial [slug] (/memorial/[slug])
-│
-├─→ Pet Types (/pet-types)
-│   ├─→ Dogs, Cats, Birds, etc.
-│   └─→ Memorial [slug] (/memorial/[slug])
-│
-├─→ Services (/services)
-│   └─→ Service Details (Free, Generic, Online, etc.)
 │
 └─→ Plans (/plans)
     ├─→ Pricing (/pricing)
