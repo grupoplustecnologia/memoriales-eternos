@@ -185,7 +185,7 @@ export function MapContent({
             <Marker
               key={profile.id}
               position={[profile.latitude, profile.longitude]}
-              icon={createCustomIcon(profile.animalType, isSelected, userPlan)}
+              icon={createCustomIcon(profile.animalType, isSelected, profile.userSubscriptionTier)}
               eventHandlers={{
                 click: () => {
                   if (onProfileSelect) {
