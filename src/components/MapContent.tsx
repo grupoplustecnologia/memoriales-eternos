@@ -25,10 +25,11 @@ const createCustomIcon = (type: string, isSelected: boolean = false, userPlan?: 
 
   const color = iconColors[type] || '#7a8b62';
   
-  // Get size based on plan
+  // Get size and style based on plan
   let baseSizeMultiplier = 1;
   let highlightColor = 'white';
   let hasRedBackground = false;
+  let markerStyle = 'teardrop'; // 'teardrop', 'square', 'premium'
   
   if (userPlan) {
     const markerSize = PlanPermissionsService.getMapMarkerSize(userPlan as any);
@@ -38,8 +39,11 @@ const createCustomIcon = (type: string, isSelected: boolean = false, userPlan?: 
     const sizeMap = { small: 0.5, medium: 0.5, large: 1.2, xlarge: 1.6 };
     baseSizeMultiplier = sizeMap[markerSize as keyof typeof sizeMap] || 1;
     
-    // Apply red background for xlarge marked profiles
-    if (markerHighlight === 'red') {
+    // Determine marker style based on plan
+    if (userPlan === 'cielo-estrellas') {
+      markerStyle = 'square'; // Square for Cielo de Estrellas
+    } else if (markerHighlight === 'red') {
+      markerStyle = 'premium'; // Teardrop + red circle for Premium Pro
       hasRedBackground = true;
       highlightColor = '#ef4444'; // red-500
     }
@@ -49,17 +53,64 @@ const createCustomIcon = (type: string, isSelected: boolean = false, userPlan?: 
   const size = Math.round(baseSize * baseSizeMultiplier);
   const borderWidth = isSelected ? 4 : 3;
 
-  return L.divIcon({
-    html: `
-      <div style="
-        position: relative;
-        width: ${size}px;
-        height: ${size}px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        ${hasRedBackground ? `
+  // Square marker for Cielo de Estrellas
+  if (markerStyle === 'square') {
+    return L.divIcon({
+      html: `
+        <div style="
+          position: relative;
+          width: ${size}px;
+          height: ${size}px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <div style="
+            background-color: ${color};
+            width: ${size}px;
+            height: ${size}px;
+            border-radius: 4px;
+            border: ${borderWidth}px solid ${isSelected ? '#06b6d4' : '#0ea5e9'};
+            box-shadow: 0 ${isSelected ? 4 : 2}px ${isSelected ? 12 : 8}px rgba(6, 182, 212, ${isSelected ? 0.5 : 0.3});
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: ${isSelected ? 'pulse-sq 0.5s ease' : 'none'};
+            background: linear-gradient(135deg, ${color}, rgba(14, 165, 233, 0.3));
+          ">
+            <span style="
+              color: white;
+              font-size: ${Math.round(size * 0.5)}px;
+            ">⭐</span>
+          </div>
+        </div>
+        <style>
+          @keyframes pulse-sq {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+          }
+        </style>
+      `,
+      className: 'custom-marker-square',
+      iconSize: [size + 8, size + 8],
+      iconAnchor: [(size + 8) / 2, (size + 8) / 2],
+      popupAnchor: [0, -(size + 4)]
+    });
+  }
+
+  // Premium marker (teardrop + red background)
+  if (markerStyle === 'premium') {
+    return L.divIcon({
+      html: `
+        <div style="
+          position: relative;
+          width: ${size}px;
+          height: ${size}px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
           <div style="
             position: absolute;
             width: ${size + 8}px;
@@ -72,7 +123,52 @@ const createCustomIcon = (type: string, isSelected: boolean = false, userPlan?: 
             transform: translate(-50%, -50%);
             box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
           "></div>
-        ` : ''}
+          <div style="
+            background-color: ${color};
+            width: ${size}px;
+            height: ${size}px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            border: ${borderWidth}px solid ${isSelected ? '#fbbf24' : 'white'};
+            box-shadow: 0 ${isSelected ? 4 : 2}px ${isSelected ? 12 : 8}px rgba(0,0,0,${isSelected ? 0.4 : 0.3});
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: ${isSelected ? 'bounce 0.5s ease' : 'none'};
+          ">
+            <span style="
+              transform: rotate(45deg);
+              color: white;
+              font-size: ${Math.round(size * 0.5)}px;
+            ">🐾</span>
+          </div>
+        </div>
+        <style>
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(-45deg); }
+            50% { transform: translateY(-10px) rotate(-45deg); }
+          }
+        </style>
+      `,
+      className: 'custom-marker',
+      iconSize: [size + 8, size + 8],
+      iconAnchor: [(size + 8) / 2, size + 8],
+      popupAnchor: [0, -(size + 8)]
+    });
+  }
+
+  // Default teardrop marker for Gratuito
+  return L.divIcon({
+    html: `
+      <div style="
+        position: relative;
+        width: ${size}px;
+        height: ${size}px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
         <div style="
           background-color: ${color};
           width: ${size}px;
