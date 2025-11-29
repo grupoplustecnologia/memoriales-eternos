@@ -225,6 +225,87 @@ export function AdminPanel() {
     return <AdminLoginForm />;
   }
 
+  const handleUpdateUserPlan = async (userId: string, newTier: string) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ subscriptionTier: newTier })
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        setError(result.error || 'Error al actualizar plan');
+        setLoading(false);
+        return;
+      }
+
+      setSuccessMessage(result.message || 'Plan actualizado exitosamente');
+      
+      // Update local users list
+      setUsers(users.map(u => 
+        u.id === userId ? { ...u, subscriptionTier: newTier } : u
+      ));
+
+      setLoading(false);
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error updating plan');
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userEmail: string, memorialCount: number) => {
+    const confirmMessage = `¿Estás seguro de que quieres eliminar el usuario ${userEmail}?\n\n⚠️ Esto eliminará también ${memorialCount} memorial${memorialCount !== 1 ? 'es' : ''} asociado${memorialCount !== 1 ? 's' : ''}.\n\nEsta acción no se puede deshacer.`;
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE',
+        headers
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        setError(result.error || 'Error al eliminar usuario');
+        setLoading(false);
+        return;
+      }
+
+      setSuccessMessage(result.message || 'Usuario eliminado exitosamente');
+      setUsers(users.filter(u => u.id !== userId));
+      setLoading(false);
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error deleting user');
+      setLoading(false);
+    }
+  };
+
   const handleDeleteProfile = async (profileId: string) => {
     if (!confirm('¿Estás seguro de que quieres eliminar este memorial?')) {
       return;
@@ -463,24 +544,51 @@ export function AdminPanel() {
           <Card>
             <CardHeader>
               <CardTitle>Gestión de Usuarios</CardTitle>
-              <CardDescription>Administrar usuarios del sistema</CardDescription>
+              <CardDescription>Administrar usuarios del sistema y sus planes</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border-t pt-4">
-                <h3 className="font-semibold mb-4">Lista de Usuarios</h3>
+                <h3 className="font-semibold mb-4">Lista de Usuarios ({users.length})</h3>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {users.map(u => (
-                    <div key={u.id} className="flex items-center justify-between p-3 bg-nature-50 rounded-lg">
-                      <div>
-                        <p className="font-medium">{u.name}</p>
-                        <p className="text-xs text-muted-foreground">{u.email}</p>
+                  {users.length === 0 ? (
+                    <p className="text-muted-foreground text-sm p-4 text-center">No hay usuarios registrados</p>
+                  ) : (
+                    users.map(u => (
+                      <div key={u.id} className="flex items-center justify-between p-3 bg-nature-50 rounded-lg border border-nature-100">
+                        <div className="flex-1">
+                          <p className="font-medium">{u.name}</p>
+                          <p className="text-xs text-muted-foreground">{u.email}</p>
+                          <p className="text-xs text-muted-foreground mt-1">📦 {u._count.profiles} memorial{u._count.profiles !== 1 ? 'es' : ''}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant={u.subscriptionTier === 'huella-eterna' ? 'outline' : 'default'}>
+                            {u.subscriptionTier === 'huella-eterna' && '🆓 Gratuito'}
+                            {u.subscriptionTier === 'cielo-estrellas' && '⭐ Cielo'}
+                            {u.subscriptionTier === 'santuario-premium' && '👑 Premium'}
+                          </Badge>
+                          <select
+                            value={u.subscriptionTier}
+                            onChange={(e) => handleUpdateUserPlan(u.id, e.target.value)}
+                            className="text-xs px-2 py-1 border rounded bg-white hover:bg-nature-50 cursor-pointer"
+                            disabled={loading}
+                          >
+                            <option value="huella-eterna">🆓 Gratuito</option>
+                            <option value="cielo-estrellas">⭐ Cielo de Estrellas</option>
+                            <option value="santuario-premium">👑 Santuario Premium</option>
+                          </select>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 border-red-300 hover:bg-red-50"
+                            onClick={() => handleDeleteUser(u.id, u.email, u._count.profiles)}
+                            disabled={loading}
+                          >
+                            🗑️ Eliminar
+                          </Button>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <Badge>{u.subscriptionTier}</Badge>
-                        <p className="text-xs text-muted-foreground">{u._count.profiles} memoriales</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </CardContent>
