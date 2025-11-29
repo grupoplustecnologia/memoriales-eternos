@@ -259,6 +259,42 @@ export const generateSitemapUrls = (profiles?: Array<{ id: string; updatedAt?: s
       loc: `${baseUrl}/pricing`,
       changefreq: 'monthly',
       priority: 0.8
+    },
+    // SEO Landing Pages
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-perros`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-gatos`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/cementerio-virtual-mascotas-exoticas`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-mascotas-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-perros-online`,
+      changefreq: 'weekly',
+      priority: 0.85
+    },
+    {
+      loc: `${baseUrl}/memorial-gatos-online`,
+      changefreq: 'weekly',
+      priority: 0.85
     }
   ];
 
