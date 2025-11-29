@@ -69,6 +69,68 @@ export default function MapboxMap({
   };
 
   // Función para crear marker personalizado moderno
+  // Función para agrupar marcadores cercanos
+  const clusterNearbyMarkers = (markersList: typeof markers) => {
+    const clustered: Array<{
+      originalMarkers: typeof markers;
+      center: { lng: number; lat: number };
+      offsetPositions: Array<{ lng: number; lat: number; index: number }>;
+    }> = [];
+    const processed = new Set<number>();
+    const PROXIMITY_THRESHOLD = 0.0005; // ~50 metros en coordenadas
+
+    markersList.forEach((marker, idx) => {
+      if (processed.has(idx)) return;
+
+      const nearby = [idx];
+      processed.add(idx);
+
+      // Buscar marcadores cercanos
+      markersList.forEach((otherMarker, otherIdx) => {
+        if (idx === otherIdx || processed.has(otherIdx)) return;
+
+        const distance = Math.sqrt(
+          Math.pow(marker.lng - otherMarker.lng, 2) +
+          Math.pow(marker.lat - otherMarker.lat, 2)
+        );
+
+        if (distance <= PROXIMITY_THRESHOLD) {
+          nearby.push(otherIdx);
+          processed.add(otherIdx);
+        }
+      });
+
+      // Si solo hay un marcador, agregar sin offset
+      if (nearby.length === 1) {
+        clustered.push({
+          originalMarkers: [markersList[idx]],
+          center: { lng: marker.lng, lat: marker.lat },
+          offsetPositions: [{ lng: marker.lng, lat: marker.lat, index: 0 }],
+        });
+      } else {
+        // Crear patrón circular para múltiples marcadores
+        const offsetPositions = nearby.map((markerIdx, position) => {
+          const angle = (position / nearby.length) * Math.PI * 2;
+          const radius = 0.0002; // ~20 metros
+
+          return {
+            lng: marker.lng + radius * Math.cos(angle),
+            lat: marker.lat + radius * Math.sin(angle),
+            index: markerIdx,
+          };
+        });
+
+        clustered.push({
+          originalMarkers: nearby.map(idx => markersList[idx]),
+          center: { lng: marker.lng, lat: marker.lat },
+          offsetPositions,
+        });
+      }
+    });
+
+    return clustered;
+  };
+
   // Función para crear marker personalizado por plan
   const createFlagMarker = (animalType: string, userPlan?: string, photoUrl?: string) => {
     const el = document.createElement('div');
@@ -377,38 +439,57 @@ export default function MapboxMap({
 
       const mapboxgl = (await import('mapbox-gl')).default;
 
-      // Add new markers
-      markers.forEach((marker) => {
-        // Crear elemento personalizado para el marcador
-        const el = createFlagMarker(marker.animalType, marker.userSubscriptionTier, marker.photoUrl);
+      // Agrupar marcadores cercanos
+      const clusteredMarkers = clusterNearbyMarkers(markers);
 
-        // Crear popup con tarjeta del animal
-        const popupHTML = `
-          <a href="/profile/${marker.id}" class="block no-underline">
-            <div class="w-48 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow bg-white">
-              <div class="relative h-32 bg-gray-200">
-                <img src="${marker.photoUrl}" alt="${marker.name}" class="w-full h-full object-cover" />
-              </div>
-              <div class="p-3">
-                <h3 class="font-bold text-base text-gray-800">${marker.name}</h3>
-                <p class="text-xs text-gray-600 mb-2">${marker.breed || marker.animalType}</p>
-                <p class="text-xs text-gray-700 italic mb-2 line-clamp-2">"${marker.epitaph}"</p>
-                <div class="mt-2 text-center text-xs font-semibold text-nature-600 hover:text-nature-800">
-                  Ver Memorial →
+      // Add new markers with clustering
+      clusteredMarkers.forEach((cluster) => {
+        cluster.offsetPositions.forEach((offsetPos) => {
+          const markerData = markers.find(m => 
+            m.lng === cluster.originalMarkers[0].lng && 
+            m.lat === cluster.originalMarkers[0].lat
+          );
+          
+          // Encontrar el marcador correcto por índice en el cluster
+          const actualMarker = cluster.originalMarkers[offsetPos.index];
+          
+          if (!actualMarker) return;
+
+          // Crear elemento personalizado para el marcador
+          const el = createFlagMarker(
+            actualMarker.animalType, 
+            actualMarker.userSubscriptionTier, 
+            actualMarker.photoUrl
+          );
+
+          // Crear popup con tarjeta del animal
+          const popupHTML = `
+            <a href="/profile/${actualMarker.id}" class="block no-underline">
+              <div class="w-48 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow bg-white">
+                <div class="relative h-32 bg-gray-200">
+                  <img src="${actualMarker.photoUrl}" alt="${actualMarker.name}" class="w-full h-full object-cover" />
+                </div>
+                <div class="p-3">
+                  <h3 class="font-bold text-base text-gray-800">${actualMarker.name}</h3>
+                  <p class="text-xs text-gray-600 mb-2">${actualMarker.breed || actualMarker.animalType}</p>
+                  <p class="text-xs text-gray-700 italic mb-2 line-clamp-2">"${actualMarker.epitaph}"</p>
+                  <div class="mt-2 text-center text-xs font-semibold text-nature-600 hover:text-nature-800">
+                    Ver Memorial →
+                  </div>
                 </div>
               </div>
-            </div>
-          </a>
-        `;
+            </a>
+          `;
 
-        const popup = new mapboxgl.Popup({ offset: 0, maxWidth: 'none' }).setHTML(popupHTML);
-        
-        const newMarker = new mapboxgl.Marker(el)
-          .setLngLat([marker.lng, marker.lat])
-          .setPopup(popup)
-          .addTo(map.current!);
-        
-        markersRef.current.push(newMarker);
+          const popup = new mapboxgl.Popup({ offset: 0, maxWidth: 'none' }).setHTML(popupHTML);
+          
+          const newMarker = new mapboxgl.Marker(el)
+            .setLngLat([offsetPos.lng, offsetPos.lat])
+            .setPopup(popup)
+            .addTo(map.current!);
+          
+          markersRef.current.push(newMarker);
+        });
       });
     };
 
