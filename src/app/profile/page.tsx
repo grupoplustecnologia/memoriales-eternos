@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,15 @@ interface UserMemorial {
   tributes: number;
 }
 
+interface Tribute {
+  id: string;
+  memorialName: string;
+  tributeType: string;
+  visitorName: string;
+  message?: string;
+  createdAt: string;
+}
+
 interface ActivityLog {
   id: string;
   action: string;
@@ -33,92 +42,107 @@ export default function ProfilePage() {
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
     profilePicture: user?.profilePicture || '',
-    bio: ''
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [myMemorials, setMyMemorials] = useState<UserMemorial[]>([]);
+  const [tributes, setTributes] = useState<Tribute[]>([]);
+  const [activityLog, setActivityLog] = useState<ActivityLog[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for memorials
-  const myMemorials: UserMemorial[] = [
-    {
-      id: '1',
-      name: 'Max',
-      animalType: 'perro',
-      photoUrl: 'https://images.unsplash.com/photo-1633722715463-d30628ceb4a3?w=200&h=200&fit=crop',
-      createdAt: '2024-11-01',
-      tributes: 5
-    },
-    {
-      id: '2',
-      name: 'Luna',
-      animalType: 'gato',
-      photoUrl: 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=200&h=200&fit=crop',
-      createdAt: '2024-10-15',
-      tributes: 8
+  // Cargar datos reales del usuario
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
+      loadUserData();
     }
-  ];
+  }, [isAuthenticated, user?.id]);
 
-  const favoriteMemorials: UserMemorial[] = [
-    {
-      id: '3',
-      name: 'Rocky',
-      animalType: 'perro',
-      photoUrl: 'https://images.unsplash.com/photo-1587300411107-ec26ebbe63b3?w=200&h=200&fit=crop',
-      createdAt: '2024-09-20',
-      tributes: 12
-    }
-  ];
+  const loadUserData = async () => {
+    try {
+      setLoading(true);
 
-  const tributes = [
-    {
-      id: '1',
-      memorialName: 'Max',
-      tributeType: 'flower',
-      visitorName: 'Ana García',
-      createdAt: '2024-11-10'
-    },
-    {
-      id: '2',
-      memorialName: 'Luna',
-      tributeType: 'candle',
-      visitorName: 'Carlos López',
-      createdAt: '2024-11-08'
-    },
-    {
-      id: '3',
-      memorialName: 'Max',
-      tributeType: 'message',
-      visitorName: 'María Rodríguez',
-      message: 'Qué hermoso recuerdo de Max',
-      createdAt: '2024-11-05'
-    }
-  ];
+      // Obtener memoriales del usuario
+      const memorialsRes = await fetch(`/api/profiles/${user?.id}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+      });
+      if (memorialsRes.ok) {
+        const data = await memorialsRes.json();
+        setMyMemorials(data.profiles || []);
+      }
 
-  const activityLog: ActivityLog[] = [
-    {
-      id: '1',
-      action: 'memorial_created',
-      description: 'Creaste un memorial para Luna',
-      timestamp: '2024-11-15'
-    },
-    {
-      id: '2',
-      action: 'tribute_received',
-      description: 'Carlos López dejó una vela en Max',
-      timestamp: '2024-11-10'
-    },
-    {
-      id: '3',
-      action: 'profile_updated',
-      description: 'Actualizaste tu perfil',
-      timestamp: '2024-11-01'
-    },
-    {
-      id: '4',
-      action: 'memorial_created',
-      description: 'Creaste un memorial para Max',
-      timestamp: '2024-10-25'
+      // Obtener tributos recibidos
+      const tributesRes = await fetch(`/api/tributes?userId=${user?.id}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('auth_token')}` }
+      });
+      if (tributesRes.ok) {
+        const data = await tributesRes.json();
+        setTributes(data.tributes || []);
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <p className="text-center mb-4">Debes iniciar sesión para ver tu perfil</p>
+            <Link href="/auth/login">
+              <Button className="w-full bg-nature-600 hover:bg-nature-700">
+                Ir a Iniciar Sesión
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const handleSaveProfile = async () => {
+    setIsSaving(true);
+    const result = await updateProfile({
+      name: editForm.name,
+      profilePicture: editForm.profilePicture
+    });
+    if (result.success) {
+      setIsEditing(false);
+    }
+    setIsSaving(false);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/');
+  };
+
+  const getTributeBadge = (type: string) => {
+    const badges: Record<string, { emoji: string; label: string; color: string }> = {
+      flower: { emoji: '🌸', label: 'Flor', color: 'bg-pink-100 text-pink-800' },
+      candle: { emoji: '🕯️', label: 'Vela', color: 'bg-orange-100 text-orange-800' },
+      message: { emoji: '💬', label: 'Mensaje', color: 'bg-blue-100 text-blue-800' }
+    };
+    return badges[type] || badges.flower;
+  };
+
+  const getActionEmoji = (action: string) => {
+    const emojis: Record<string, string> = {
+      memorial_created: '✨',
+      tribute_received: '🎁',
+      profile_updated: '👤',
+      shared: '📤'
+    };
+    return emojis[action] || '📝';
+  };
+
+  const getPlanName = () => {
+    if (user?.planType === 'huella-eterna') return 'Gratuito';
+    if (user?.planType === 'cielo-estrellas') return 'Cielo de Estrellas';
+    if (user?.planType === 'santuario-premium') return 'Santuario Premium';
+    return 'Gratuito';
+  };
 
   if (!isAuthenticated) {
     return (
@@ -226,7 +250,7 @@ export default function ProfilePage() {
 
                 {/* Plan Badge */}
                 <Badge className="bg-gradient-to-r from-nature-600 to-sky-600 text-white px-4 py-2">
-                  👑 {user?.subscriptionTier === 'santuario-premium' ? 'Premium Anual' : 'Plan Gratuito'}
+                  👑 {getPlanName()}
                 </Badge>
               </div>
 
@@ -357,7 +381,7 @@ export default function ProfilePage() {
                     <div className="bg-nature-50 p-4 rounded-lg">
                       <p className="text-sm text-muted-foreground">Tipo de Plan</p>
                       <p className="font-medium">
-                        {user?.subscriptionTier === 'santuario-premium' ? '👑 Premium Anual' : 'Gratuito'}
+                        👑 {getPlanName()}
                       </p>
                     </div>
                   </div>
@@ -414,17 +438,17 @@ export default function ProfilePage() {
               </Card>
 
               {/* Favorite Memorials */}
-              <Card className="border-nature-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <span>⭐ Memoriales Favoritos</span>
-                    <Badge variant="outline">{favoriteMemorials.length}</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {favoriteMemorials.length > 0 ? (
+              {myMemorials.filter(m => m.isFavorite).length > 0 && (
+                <Card className="border-nature-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <span>⭐ Memoriales Favoritos</span>
+                      <Badge variant="outline">{myMemorials.filter(m => m.isFavorite).length}</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     <div className="grid md:grid-cols-2 gap-4">
-                      {favoriteMemorials.map(memorial => (
+                      {myMemorials.filter(m => m.isFavorite).map(memorial => (
                         <Link key={memorial.id} href={`/profile/${memorial.id}`}>
                           <Card className="cursor-pointer hover:shadow-lg transition-shadow border-sky-100 bg-sky-50">
                             <CardContent className="pt-4">
@@ -444,11 +468,9 @@ export default function ProfilePage() {
                         </Link>
                       ))}
                     </div>
-                  ) : (
-                    <p className="text-center text-muted-foreground py-4">No tienes memoriales favoritos aún</p>
-                  )}
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           )}
 
@@ -465,7 +487,11 @@ export default function ProfilePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {tributes.length > 0 ? (
+                {loading ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Cargando tributos...</p>
+                  </div>
+                ) : tributes.length > 0 ? (
                   <div className="space-y-3">
                     {tributes.map(tribute => {
                       const badge = getTributeBadge(tribute.tributeType);
@@ -516,9 +542,13 @@ export default function ProfilePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {activityLog.length > 0 ? (
+                {loading ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Cargando actividad...</p>
+                  </div>
+                ) : activityLog.length > 0 ? (
                   <div className="space-y-4">
-                    {activityLog.map((activity, index) => (
+                    {activityLog.map((activity) => (
                       <div
                         key={activity.id}
                         className="flex gap-4 pb-4 border-b border-nature-100 last:border-b-0"
@@ -626,29 +656,29 @@ export default function ProfilePage() {
                   <div className="p-4 bg-gradient-to-r from-nature-50 to-sky-50 rounded-lg border border-nature-200">
                     <p className="text-sm text-muted-foreground mb-2">Plan Actual</p>
                     <p className="font-bold text-lg text-nature-800 mb-4">
-                      👑 {user?.subscriptionTier === 'santuario-premium' ? 'Premium Anual' : 'Plan Gratuito'}
+                      👑 {getPlanName()}
                     </p>
-                    {user?.subscriptionTier === 'santuario-premium' && (
+                    {user?.planType && user?.planType !== 'huella-eterna' && (
                       <div className="space-y-2 mb-4 text-sm">
-                        <p>✅ Memoriales ilimitados</p>
-                        <p>✅ Galería premium con almacenamiento ilimitado</p>
-                        <p>✅ Estadísticas avanzadas</p>
+                        <p>✅ Plan Premium activado</p>
+                        <p>✅ Almacenamiento extendido</p>
+                        <p>✅ Características avanzadas</p>
                         <p>✅ Soporte prioritario</p>
                       </div>
                     )}
                   </div>
 
                   <div className="space-y-3">
-                    {user?.subscriptionTier !== 'santuario-premium' && (
+                    {user?.planType === 'huella-eterna' && (
                       <Link href="/pricing">
                         <Button className="w-full bg-nature-600 hover:bg-nature-700">
-                          Mejorar a Premium
+                          Mejorar a Plan Premium
                         </Button>
                       </Link>
                     )}
-                    {user?.subscriptionTier === 'santuario-premium' && (
+                    {user?.planType && user?.planType !== 'huella-eterna' && (
                       <p className="text-sm text-muted-foreground text-center">
-                        Tu suscripción se renovará el 15 de noviembre de 2025
+                        Tienes un plan premium activo
                       </p>
                     )}
                   </div>
