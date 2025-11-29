@@ -121,7 +121,7 @@ export default function MapPage() {
               { icon: '🕯️', label: 'Memoriales', value: profiles.length },
               { icon: '🌍', label: 'Cobertura', value: '40+ regiones' },
               { icon: '💝', label: 'Tributos', value: '1.2k+' },
-              { icon: '⭐', label: 'Destacados', value: 'Premium' },
+              { icon: '🕯️', label: 'Destacados', value: 'Premium' },
             ].map((stat, i) => (
               <div
                 key={i}
@@ -145,7 +145,7 @@ export default function MapPage() {
           <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div>
               <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground flex items-center gap-2">
-                <span className="text-xl sm:text-2xl">⭐</span>
+                <span className="text-xl sm:text-2xl">🕯️</span>
                 Destacados Premium (Últimos 10)
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1">Los memoriales más recientes</p>
@@ -192,9 +192,9 @@ export default function MapPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
                       <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-                      {/* Star Badge */}
-                      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full p-1.5 sm:p-2 shadow-lg">
-                        <span className="text-xs sm:text-sm">⭐</span>
+                      {/* Candle Badge */}
+                      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full p-1.5 sm:p-2 shadow-lg">
+                        <span className="text-xs sm:text-sm">🕯️</span>
                       </div>
 
                       {/* Content */}
