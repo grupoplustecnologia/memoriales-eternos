@@ -148,19 +148,6 @@ export default function PlansPage() {
                       </div>
                     ))}
                   </div>
-
-                  {/* Special Features */}
-                  {plan.specialFeatures.length > 0 && (
-                    <div className="mt-6 pt-6 border-t border-gray-200 space-y-2">
-                      <h4 className="font-semibold text-gray-900 text-sm">Características Exclusivas:</h4>
-                      {plan.specialFeatures.map((feature, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <span className="text-golden-400">⭐</span>
-                          <span className="text-sm text-gray-700">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </Card>
             ))}

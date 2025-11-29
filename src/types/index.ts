@@ -116,40 +116,39 @@ export const PLANS: Record<SubscriptionTier, PlanConfig> = {
     priceSubscription: 0,
     subscriptionInterval: 'monthly',
     features: [
-      '1 memorial',
-      'Foto principal + descripción',
-      '1 Tributo',
-      'Ubicación en mapa mundial',
-      'Visible para siempre',
-      '1 vela o corazón (Tributo)'
+      'Hasta 1 memorial ✓',
+      'Galería de 1 foto por memorial ✓',
+      'Tributos ilimitados ✓',
+      'Ubicación en mapa mundial ✓',
+      'Visible para siempre ✓'
     ],
     maxMemorials: 1,
-    maxPhotosPerMemorial: 5,
-    monthlyStarsIncluded: 4,
-    specialFeatures: ['Sin destacado'],
+    maxPhotosPerMemorial: 1,
+    monthlyStarsIncluded: 0,
+    specialFeatures: [],
     color: '#7a8b62'
   },
   'cielo-estrellas': {
     id: 'cielo-estrellas',
-    emotionalName: '✨ Cielo de Estrellas',
-    emoji: '✨',
+    emotionalName: '⭐ Cielo de Estrellas',
+    emoji: '⭐',
     description: 'Ideal para familias que quieren un homenaje más completo',
     priceOneTime: 2.99,
     priceSubscription: 2.99,
     subscriptionInterval: 'quarterly',
     features: [
-      'Hasta 5 memoriales',
-      'Galería de 2 fotos por memorial',
-      'Tributos ilimitados',
-      'Ubicación en mapa mundial',
-      'Visible para siempre',
-      'Iconos especiales (corona, estrella dorada, flor celestial)',
-      'Notas de homenaje de texto'
+      'Hasta 5 memoriales ✓',
+      'Galería de 2 fotos por memorial ✓',
+      'Tributos ilimitados ✓',
+      'Ubicación en mapa mundial ✓',
+      'Visible para siempre ✓',
+      'Icono especial en el mapa (Vela) ✓',
+      'Notas de homenaje de texto ✓'
     ],
     maxMemorials: 5,
     maxPhotosPerMemorial: 2,
-    monthlyStarsIncluded: 10,
-    specialFeatures: ['Destacado en mapa', 'Iconos especiales'],
+    monthlyStarsIncluded: 0,
+    specialFeatures: [],
     color: '#fbbf24'
   },
   'santuario-premium': {
@@ -161,26 +160,19 @@ export const PLANS: Record<SubscriptionTier, PlanConfig> = {
     priceSubscription: 6.99,
     subscriptionInterval: 'quarterly',
     features: [
-      'Memoriales ilimitados',
-      'Galería de fotos ilimitada',
-      'Tributos ilimitados',
-      'Ubicación en mapa mundial tamaño X2',
-      'Visible para siempre',
-      'Iconos especiales (corona, estrella dorada, flor celestial)',
-      'Recordatorios anuales para honrar amigo querido',
-      '5 destacados semanales',
-      'Soporte prioritario'
+      'Memoriales ilimitados ✓',
+      'Galería de fotos ilimitada ✓',
+      'Tributos ilimitados ✓',
+      'Ubicación en mapa mundial con foto ✓',
+      'Visible para siempre ✓',
+      'Iconos especiales ✓',
+      'Recordatorios anuales para honrar amigo querido ✓',
+      'Destacado Premium ✓'
     ],
     maxMemorials: -1,
     maxPhotosPerMemorial: -1,
-    monthlyStarsIncluded: 30,
-    specialFeatures: [
-      'Foto en mini de animalito en mapa en lugar de emoji',
-      'Recordatorios anuales',
-      '5 destacados semanales',
-      'Soporte prioritario',
-      '50% del dinero se destina a ONG'
-    ],
+    monthlyStarsIncluded: 0,
+    specialFeatures: [],
     color: '#d4af37'
   }
 };

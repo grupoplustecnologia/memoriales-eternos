@@ -146,61 +146,8 @@ export default function SubscriptionPage() {
         </div>
 
         {/* Billing Section */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          <Card className="border-sky-200">
-            <CardHeader>
-              <CardTitle>Historial de Pagos</CardTitle>
-              <CardDescription>Tus transacciones recientes</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-sky-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-sky-900">Plan {currentPlan?.emotionalName}</p>
-                    <p className="text-xs text-muted-foreground">17 de noviembre de 2024</p>
-                  </div>
-                  <p className="font-semibold text-sky-600">€{currentPlan?.priceOneTime}</p>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-sky-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-sky-900">Compra de Estrellas</p>
-                    <p className="text-xs text-muted-foreground">10 de noviembre de 2024</p>
-                  </div>
-                  <p className="font-semibold text-sky-600">€2.99</p>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-sky-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-sky-900">Tributo Premium</p>
-                    <p className="text-xs text-muted-foreground">5 de noviembre de 2024</p>
-                  </div>
-                  <p className="font-semibold text-sky-600">€4.99</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-sky-200">
-            <CardHeader>
-              <CardTitle>Información de Pago</CardTitle>
-              <CardDescription>Tu método de facturación</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-sky-50 rounded-lg border border-sky-200">
-                <p className="text-sm text-muted-foreground mb-2">Tarjeta de Crédito</p>
-                <p className="font-semibold text-sky-900 mb-2">💳 Visa ••• ••• ••• 4242</p>
-                <p className="text-xs text-muted-foreground">Expira: 12/26</p>
-              </div>
-
-              <div className="space-y-2">
-                <Button variant="outline" className="w-full border-sky-300">
-                  💳 Cambiar Método de Pago
-                </Button>
-                <Button variant="outline" className="w-full border-sky-300">
-                  📧 Descargar Recibo
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mb-12">
+          {/* This section was intentionally removed */}
         </div>
 
         {/* FAQ Section */}
