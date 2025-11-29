@@ -91,8 +91,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear sesión de checkout de Stripe
-    // Usar dominio custom si está disponible, sino usar localhost para desarrollo
-    let origin = process.env.NEXT_PUBLIC_SITE_URL || request.nextUrl.origin;
+    // Obtener el host del request y determinar la URL correcta
+    let origin = request.nextUrl.origin;
+    
+    // Si viene de netlify preview, redirigir al dominio custom
+    if (origin.includes('netlify.app')) {
+      origin = 'https://foreverpetfriend.com';
+    }
+    
+    // Para desarrollo local
     origin = origin.replace('0.0.0.0', 'localhost');
     
     const successUrl = `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&plan=${planId}`;
