@@ -25,7 +25,15 @@ export const PLAN_PERMISSIONS: Record<SubscriptionTier, PlanPermissions> = {
     maxMemorials: 1,
     maxPhotosPerMemorial: 1, // solo foto principal
     maxTributes: 1, // puede recibir 1 tributo
-    allowedTributeTypes: ['vela-blanca', 'corazon'], // solo vela o corazón
+    allowedTributeTypes: [
+      'vela-blanca',
+      'vela-dorada',
+      'flor',
+      'flor-celestial',
+      'corona-flores',
+      'corazon',
+      'angel'
+    ], // TODOS los tipos de tributo
     canCreatePublicProfiles: true, // SÍ aparece en el grid de /map
     mapMarkerSize: 'small', // emoji pequeño
     mapMarkerHighlight: 'none', // sin destaque
@@ -43,9 +51,10 @@ export const PLAN_PERMISSIONS: Record<SubscriptionTier, PlanPermissions> = {
       'vela-dorada',
       'flor',
       'flor-celestial',
+      'corona-flores',
       'corazon',
       'angel'
-    ],
+    ], // TODOS los tipos de tributo
     canCreatePublicProfiles: true, // SÍ aparece en el grid de /map
     mapMarkerSize: 'medium', // emoji tamaño normal
     mapMarkerHighlight: 'normal', // sin color especial
@@ -66,7 +75,7 @@ export const PLAN_PERMISSIONS: Record<SubscriptionTier, PlanPermissions> = {
       'corona-flores',
       'corazon',
       'angel'
-    ],
+    ], // TODOS los tipos de tributo
     canCreatePublicProfiles: true, // SÍ aparece en el grid de /map
     mapMarkerSize: 'xlarge', // emoji X2 más grande
     mapMarkerHighlight: 'red', // círculo rojo de fondo para destacar
@@ -112,11 +121,31 @@ export class PlanPermissionsService {
   }
 
   /**
-   * Verifica si un usuario puede crear un tributo
+   * Verifica si un usuario puede crear un tributo (general)
    */
   static canCreateTribute(subscriptionTier: SubscriptionTier): boolean {
     const permissions = this.getPermissions(subscriptionTier);
     return permissions.maxTributes !== 0;
+  }
+
+  /**
+   * Verifica si el dueño del memorial puede recibir más tributos
+   */
+  static canReceiveMoreTributes(
+    subscriptionTier: SubscriptionTier,
+    currentTributeCount: number
+  ): boolean {
+    const permissions = this.getPermissions(subscriptionTier);
+    if (permissions.maxTributes === -1) return true; // ilimitado
+    return currentTributeCount < permissions.maxTributes;
+  }
+
+  /**
+   * Obtiene el límite máximo de tributos para un plan
+   */
+  static getMaxTributes(subscriptionTier: SubscriptionTier): number {
+    const permissions = this.getPermissions(subscriptionTier);
+    return permissions.maxTributes;
   }
 
   /**

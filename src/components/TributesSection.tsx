@@ -50,6 +50,8 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
+  const [memorialOwnerPlan, setMemorialOwnerPlan] = useState<string>('huella-eterna');
+  const [tributeLimitReached, setTributeLimitReached] = useState(false);
 
   // Cargar tributos desde la API
   const loadTributes = async () => {
@@ -72,6 +74,22 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
           replies: []
         }));
         setTributes(transformed);
+        
+        // Obtener información del dueño del memorial desde el API
+        try {
+          const memorialResponse = await fetch(`/api/profiles/${memorialId}`);
+          const memorialData = await memorialResponse.json();
+          if (memorialData.success && memorialData.data?.user?.subscriptionTier) {
+            setMemorialOwnerPlan(memorialData.data.user.subscriptionTier);
+            // Verificar si se alcanzó el límite
+            const maxTributes = memorialData.data.user.subscriptionTier === 'huella-eterna' ? 1 : -1;
+            if (maxTributes === 1 && transformed.length >= 1) {
+              setTributeLimitReached(true);
+            }
+          }
+        } catch (err) {
+          console.error('Error loading memorial owner info:', err);
+        }
       }
     } catch (error) {
       console.error('Error loading tributes:', error);
@@ -156,6 +174,12 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
         // Refresh tribute data
         console.log('[TributesSection] Refreshing tributes...');
         await loadTributes();
+      } else if (result.tributeLimitReached) {
+        // El memorial ya alcanzó su límite
+        const maxTributes = result.maxTributes;
+        const currentCount = result.currentCount;
+        alert(`⚠️ Este memorial ya ha recibido su límite de ${maxTributes} tributo${maxTributes > 1 ? 's' : ''}.\n\nEl dueño del memorial necesita actualizar su plan para recibir más tributos.`);
+        setTributeLimitReached(true);
       } else {
         alert('Error al guardar el tributo: ' + (result.error || 'Error desconocido'));
       }
@@ -222,6 +246,24 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
               </Button>
             </div>
           )}
+
+          {/* Alerta cuando se alcanza el límite de tributos */}
+          {tributeLimitReached && (
+            <div className="bg-orange-50 border-2 border-orange-300 rounded-lg p-4 mb-4">
+              <p className="text-orange-900 font-medium mb-2">⚠️ Límite de Tributos Alcanzado</p>
+              <p className="text-orange-800 text-sm mb-3">
+                Este memorial ha recibido el máximo de tributos permitido por su plan (1 tributo). 
+                El dueño necesita actualizar su plan para recibir más tributos.
+              </p>
+              <Button
+                onClick={() => router.push('/subscription')}
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+              >
+                Ver Planes de Actualización
+              </Button>
+            </div>
+          )}
+
           {/* Selección de tipo de tributo */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Tipo de Tributo</label>
@@ -230,9 +272,9 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
                 <button
                   key={type.id}
                   onClick={() => setSelectedTributeType(type.id as any)}
-                  disabled={!isAuthenticated}
+                  disabled={!isAuthenticated || tributeLimitReached}
                   className={`p-3 rounded-lg transition-all border-2 ${
-                    !isAuthenticated
+                    !isAuthenticated || tributeLimitReached
                       ? 'opacity-50 cursor-not-allowed'
                       : selectedTributeType === type.id
                       ? `${type.color} border-current`
@@ -253,7 +295,7 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
               placeholder="Comparte tus recuerdos y sentimientos..."
               value={tributeMessage}
               onChange={(e) => setTributeMessage(e.target.value)}
-              disabled={!isAuthenticated}
+              disabled={!isAuthenticated || tributeLimitReached}
               className="min-h-24"
             />
           </div>
@@ -266,7 +308,7 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
                 placeholder="¿Cómo te llamas?"
                 value={tributeAuthor}
                 onChange={(e) => setTributeAuthor(e.target.value)}
-                disabled={!isAuthenticated}
+                disabled={!isAuthenticated || tributeLimitReached}
               />
             </div>
           )}
@@ -278,7 +320,7 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
                 type="checkbox"
                 checked={isAnonymous}
                 onChange={(e) => setIsAnonymous(e.target.checked)}
-                disabled={!isAuthenticated}
+                disabled={!isAuthenticated || tributeLimitReached}
                 className="w-4 h-4"
               />
               <span className="text-sm">🕵️ Enviar de forma anónima</span>
@@ -289,7 +331,7 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
                 type="checkbox"
                 checked={isPremium}
                 onChange={(e) => setIsPremium(e.target.checked)}
-                disabled={!isAuthenticated}
+                disabled={!isAuthenticated || tributeLimitReached}
                 className="w-4 h-4"
               />
               <div className="flex-1">
@@ -316,16 +358,16 @@ export default function TributesSection({ memorialId }: { memorialId: string }) 
           <div className="flex gap-2 pt-4">
             <Button
               onClick={handleAddTribute}
-              disabled={!isAuthenticated}
+              disabled={!isAuthenticated || tributeLimitReached}
               className={`flex-1 ${
-                !isAuthenticated
+                !isAuthenticated || tributeLimitReached
                   ? 'opacity-50 cursor-not-allowed'
                   : isPremium
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
                   : 'bg-nature-600 hover:bg-nature-700'
               }`}
             >
-              {isPremium ? '💳 Enviar Tributo Premium (€5.99)' : '✓ Enviar Tributo'}
+              {!isAuthenticated ? '🔐 Inicia sesión para enviar' : tributeLimitReached ? '❌ Límite alcanzado' : isPremium ? '💳 Enviar Tributo Premium (€5.99)' : '✓ Enviar Tributo'}
             </Button>
           </div>
         </CardContent>

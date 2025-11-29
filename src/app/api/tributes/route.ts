@@ -1,6 +1,7 @@
 import { getTributes, createTribute, deleteTribute, getTributeStats } from '@/lib/tributesService';
 import { verifySessionToken } from '@/lib/auth';
 import { PlanPermissionsService } from '@/lib/planPermissions';
+import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -77,6 +78,42 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: false,
         error: `Tribute type '${tributeType}' not allowed for your plan. Allowed types: ${allowedTypes.join(', ')}`
+      }, { status: 403 });
+    }
+
+    // ============ NUEVA VALIDACIÓN: Verificar límite de tributos del DUEÑO del memorial ============
+    // Obtener el memorial y su dueño
+    const memorial = await prisma.animalProfile.findUnique({
+      where: { id: profileId },
+      include: {
+        user: true,
+        tributes: true
+      }
+    });
+
+    if (!memorial) {
+      return NextResponse.json({
+        success: false,
+        error: 'Memorial not found'
+      }, { status: 404 });
+    }
+
+    // Verificar el plan del DUEÑO del memorial
+    const memorialOwnerPlan = memorial.user.subscriptionTier || 'huella-eterna';
+    const currentTributeCount = memorial.tributes.length;
+    const canReceiveMoreTributes = PlanPermissionsService.canReceiveMoreTributes(
+      memorialOwnerPlan as any,
+      currentTributeCount
+    );
+
+    if (!canReceiveMoreTributes) {
+      const maxTributes = PlanPermissionsService.getMaxTributes(memorialOwnerPlan as any);
+      return NextResponse.json({
+        success: false,
+        error: `This memorial has reached its tribute limit of ${maxTributes}. The owner would need to upgrade their plan to receive more tributes.`,
+        tributeLimitReached: true,
+        currentCount: currentTributeCount,
+        maxTributes: maxTributes
       }, { status: 403 });
     }
 
