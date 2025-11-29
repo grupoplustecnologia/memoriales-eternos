@@ -193,8 +193,8 @@ export default function MapPage() {
                       <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
                       {/* Candle Badge */}
-                      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full p-1.5 sm:p-2 shadow-lg">
-                        <span className="text-xs sm:text-sm">🕯️</span>
+                      <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+                        <span className="text-xl sm:text-2xl">🕯️</span>
                       </div>
 
                       {/* Content */}

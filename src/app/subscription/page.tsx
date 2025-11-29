@@ -1,14 +1,37 @@
 'use client';
 
-import { useAuth } from '@/contexts/AuthContext';
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PLANS } from '@/types/index';
+import { PLANS } from '@/lib/stripe';
+import { getAuthToken } from '@/lib/auth-client';
+import Link from 'next/link';
 
 export default function SubscriptionPage() {
-  const { user, isAuthenticated } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Obtener datos del usuario actual
+    const token = getAuthToken();
+    if (token) {
+      setIsAuthenticated(true);
+      fetch('/api/subscription-status', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setUser(data.data.user);
+          }
+        })
+        .catch((err) => console.error('Error:', err));
+    }
+  }, []);
 
   if (!isAuthenticated) {
     return (
@@ -27,9 +50,50 @@ export default function SubscriptionPage() {
     );
   }
 
-  const plans = Object.values(PLANS);
-  const currentPlanId = user?.subscriptionTier || 'huella-eterna';
-  const currentPlan = plans.find(p => p.id === currentPlanId);
+  const handleSelectPlan = async (planId: string) => {
+    const token = getAuthToken();
+
+    if (!token) {
+      router.push(`/auth/login?redirect=/subscription&plan=${planId}`);
+      return;
+    }
+
+    setLoading(planId);
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ planId }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        if (data.sessionUrl) {
+          // Redirigir a Stripe Checkout
+          window.location.href = data.sessionUrl;
+        } else if (data.planType === 'free') {
+          // Plan gratuito activado
+          alert('¡Plan activado exitosamente!');
+          router.refresh();
+        }
+      } else {
+        alert('Error: ' + (data.error || 'No se pudo procesar el pago'));
+      }
+    } catch (error) {
+      console.error('Error al procesar el pago:', error);
+      alert('Error al procesar el pago');
+    } finally {
+      setLoading(null);
+    }
+  };
+
+  const planArray = Object.values(PLANS);
+  const currentPlanId = user?.planType || 'huella-eterna';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50 py-12">
@@ -42,32 +106,38 @@ export default function SubscriptionPage() {
           </p>
 
           {/* Current Plan Info */}
-          <Card className="max-w-2xl mx-auto border-sky-200 bg-gradient-to-r from-sky-50 to-blue-50 mb-8">
-            <CardContent className="pt-6">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div className="text-left">
-                  <p className="text-sm text-muted-foreground">Plan Actual</p>
-                  <p className="text-2xl font-bold text-sky-900">{currentPlan?.emotionalName}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{currentPlan?.description}</p>
+          {user && (
+            <Card className="max-w-2xl mx-auto border-sky-200 bg-gradient-to-r from-sky-50 to-blue-50 mb-8">
+              <CardContent className="pt-6">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div className="text-left">
+                    <p className="text-sm text-muted-foreground">Plan Actual</p>
+                    <p className="text-2xl font-bold text-sky-900">
+                      {planArray.find(p => p.id === currentPlanId)?.name || 'Huella Eterna'}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {planArray.find(p => p.id === currentPlanId)?.description}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    {currentPlanId !== 'huella-eterna' && (
+                      <>
+                        <p className="text-sm text-muted-foreground">Plan de pago único</p>
+                        <p className="text-lg font-semibold text-sky-600">
+                          Acceso permanente
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div className="text-right">
-                  {currentPlanId !== 'huella-eterna' && (
-                    <>
-                      <p className="text-sm text-muted-foreground">Próxima renovación</p>
-                      <p className="text-lg font-semibold text-sky-600">
-                        15 de {new Date().toLocaleDateString('es-ES', { month: 'long' })}
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Plans Comparison Grid */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {plans.map((plan, index) => (
+          {planArray.map((plan, index) => (
             <Card
               key={plan.id}
               className={`border-2 transition-all hover:shadow-xl relative ${
@@ -75,16 +145,12 @@ export default function SubscriptionPage() {
                   ? 'border-sky-600 bg-gradient-to-br from-sky-50 to-blue-50 shadow-lg'
                   : 'border-sky-200 hover:border-sky-400'
               }`}
-              style={{
-                borderTopColor: plan.color,
-                borderTopWidth: '4px'
-              }}
             >
               {/* Featured Badge */}
               {index === 2 && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-gradient-to-r from-golden-400 to-yellow-400 text-white px-4 py-1">
-                    {plan.emoji} Recomendado
+                    👑 Recomendado
                   </Badge>
                 </div>
               )}
@@ -98,8 +164,7 @@ export default function SubscriptionPage() {
               )}
 
               <CardHeader>
-                <div className="text-4xl mb-2">{plan.emoji}</div>
-                <CardTitle className="text-2xl text-sky-900">{plan.emotionalName}</CardTitle>
+                <CardTitle className="text-2xl text-sky-900">{plan.name}</CardTitle>
                 <CardDescription>{plan.description}</CardDescription>
               </CardHeader>
 
@@ -107,7 +172,7 @@ export default function SubscriptionPage() {
                 {/* Price */}
                 <div className="py-4 border-t border-b border-gray-200">
                   <div className="text-3xl font-bold text-sky-700">
-                    {plan.priceOneTime === 0 ? 'Gratuito' : `€${plan.priceOneTime}`}
+                    {plan.price === 0 ? 'Gratuito' : plan.priceDisplay}
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">Pago único</p>
                 </div>
@@ -123,31 +188,25 @@ export default function SubscriptionPage() {
                 </div>
 
                 {/* CTA Button */}
-                {plan.id === currentPlanId ? (
-                  <Button
-                    disabled
-                    className="w-full bg-sky-600 text-white cursor-default opacity-75"
-                  >
-                    ✅ Plan Actual
-                  </Button>
-                ) : (
-                  <Button
-                    className="w-full text-white font-semibold"
-                    style={{
-                      backgroundColor: plan.color
-                    }}
-                  >
-                    {plan.id === 'huella-eterna' ? 'Plan Gratuito' : 'Mejorar Ahora'}
-                  </Button>
-                )}
+                <Button
+                  onClick={() => handleSelectPlan(plan.id)}
+                  disabled={loading === plan.id || plan.id === currentPlanId}
+                  className="w-full text-white font-semibold"
+                  variant={plan.id === currentPlanId ? 'outline' : 'default'}
+                >
+                  {loading === plan.id ? (
+                    'Procesando...'
+                  ) : plan.id === currentPlanId ? (
+                    '✅ Plan Actual'
+                  ) : plan.id === 'huella-eterna' ? (
+                    'Usar Plan Gratuito'
+                  ) : (
+                    'Elegir Plan'
+                  )}
+                </Button>
               </CardContent>
             </Card>
           ))}
-        </div>
-
-        {/* Billing Section */}
-        <div className="mb-12">
-          {/* This section was intentionally removed */}
         </div>
 
         {/* FAQ Section */}
@@ -159,23 +218,9 @@ export default function SubscriptionPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <h3 className="font-semibold text-sky-900 mb-2">¿Cómo funcionan las Estrellas?</h3>
-              <p className="text-muted-foreground">
-                Las Estrellas son puntos para crear tributos especiales. Cada plan incluye estrellas mensuales. Puedes comprar más en la tienda.
-              </p>
-            </div>
-
-            <div>
               <h3 className="font-semibold text-sky-900 mb-2">¿Puedo cambiar de plan en cualquier momento?</h3>
               <p className="text-muted-foreground">
                 Sí, puedes cambiar de plan en cualquier momento. Los cambios se reflejan inmediatamente en tu cuenta.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold text-sky-900 mb-2">¿Qué son los Momentos Especiales?</h3>
-              <p className="text-muted-foreground">
-                Son secciones para contar historias emocionales del memorial. Planes superiores desbloquean más momentos: Primer Día, Último Adiós, Su Historia, y más.
               </p>
             </div>
 
@@ -212,7 +257,7 @@ export default function SubscriptionPage() {
             <Button className="bg-sky-600 hover:bg-sky-700">
               💬 Contactar Soporte
             </Button>
-            <Link href="/plans">
+            <Link href="/pricing">
               <Button variant="outline" className="border-sky-300">
                 📖 Ver Todos los Planes
               </Button>
