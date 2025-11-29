@@ -86,23 +86,23 @@ export default function MapboxMap({
           width: 56px;
           height: 56px;
           cursor: pointer;
-          filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+          filter: drop-shadow(0 4px 16px rgba(168, 85, 247, 0.4));
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         "
-        onmouseover="this.style.transform='scale(1.15) translateY(-8px)'; this.style.filter='drop-shadow(0 12px 24px rgba(239, 68, 68, 0.3))'"
-        onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15))'">
-          <!-- Red background circle for Premium Pro -->
+        onmouseover="this.style.transform='scale(1.15) translateY(-8px)'; this.style.filter='drop-shadow(0 8px 24px rgba(168, 85, 247, 0.6))'"
+        onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 4px 16px rgba(168, 85, 247, 0.4))'">
+          <!-- Premium purple border -->
           <div style="
             position: absolute;
             width: 64px;
             height: 64px;
-            background-color: #fee2e2;
-            border: 2px solid #ef4444;
+            background: radial-gradient(circle at 30% 30%, rgba(216, 180, 254, 0.4), transparent);
+            border: 2px solid rgba(168, 85, 247, 0.6);
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 16px rgba(168, 85, 247, 0.3), inset 0 0 12px rgba(168, 85, 247, 0.15);
             z-index: 1;
           "></div>
           <!-- Glow background -->
@@ -110,7 +110,7 @@ export default function MapboxMap({
             position: absolute;
             width: 56px;
             height: 56px;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), transparent);
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.6), transparent);
             border-radius: 50%;
             z-index: 2;
           "></div>
@@ -120,26 +120,27 @@ export default function MapboxMap({
             height: 52px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
-            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.1);
+            border: 3px solid rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.3), inset 0 0 12px rgba(0, 0, 0, 0.1);
             z-index: 3;
           "/>
-          <!-- Badge vela -->
+          <!-- Badge crown -->
           <div style="
             position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            top: -6px;
+            right: -6px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #a855f7, #9333ea);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 14px;
             border: 2px solid white;
             z-index: 4;
-          ">🕯️</div>
+            box-shadow: 0 2px 8px rgba(168, 85, 247, 0.4);
+          ">👑</div>
         </div>
       `;
     }
@@ -151,8 +152,8 @@ export default function MapboxMap({
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 56px;
-          height: 56px;
+          width: 46px;
+          height: 46px;
           cursor: pointer;
           filter: drop-shadow(0 4px 12px rgba(6, 182, 212, 0.3));
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -162,8 +163,8 @@ export default function MapboxMap({
           <!-- Square background with gradient -->
           <div style="
             position: absolute;
-            width: 56px;
-            height: 56px;
+            width: 46px;
+            height: 46px;
             background: linear-gradient(135deg, ${color}, rgba(14, 165, 233, 0.3));
             border-radius: 8px;
             z-index: 1;
@@ -171,8 +172,8 @@ export default function MapboxMap({
           <!-- Cyan border -->
           <div style="
             position: absolute;
-            width: 56px;
-            height: 56px;
+            width: 46px;
+            height: 46px;
             border: 3px solid #0ea5e9;
             border-radius: 8px;
             box-shadow: inset 0 0 12px rgba(14, 165, 233, 0.2);
@@ -180,7 +181,7 @@ export default function MapboxMap({
           "></div>
           <!-- Vela icon con animación -->
           <div style="
-            font-size: 28px;
+            font-size: 24px;
             z-index: 3;
             text-shadow: 0 2px 4px rgba(6, 182, 212, 0.3);
             animation: pulse-star 2s infinite;
@@ -194,7 +195,66 @@ export default function MapboxMap({
         </div>
       `;
     }
-    // Gratuito: Cuadrado pequeño (mitad de tamaño)
+    // Premium sin foto: Circular con corona
+    else if (userPlan === 'santuario-premium') {
+      el.innerHTML = `
+        <div style="
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 56px;
+          height: 56px;
+          cursor: pointer;
+          filter: drop-shadow(0 4px 16px rgba(168, 85, 247, 0.4));
+          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        "
+        onmouseover="this.style.transform='scale(1.15) translateY(-8px)'; this.style.filter='drop-shadow(0 8px 24px rgba(168, 85, 247, 0.6))'"
+        onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 4px 16px rgba(168, 85, 247, 0.4))'">
+          <!-- Circular background with gradient border -->
+          <div style="
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            background: radial-gradient(circle at 30% 30%, rgba(216, 180, 254, 0.3), transparent),
+                        linear-gradient(135deg, ${color}, rgba(168, 85, 247, 0.2));
+            border-radius: 50%;
+            z-index: 1;
+            border: 2px solid rgba(168, 85, 247, 0.5);
+          "></div>
+          <!-- Premium gradient background -->
+          <div style="
+            position: absolute;
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1));
+            border-radius: 50%;
+            z-index: 2;
+            border: 2px solid rgba(168, 85, 247, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+          ">${icon}</div>
+          <!-- Crown icon with glow -->
+          <div style="
+            position: absolute;
+            top: -8px;
+            font-size: 18px;
+            z-index: 3;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+            animation: float 3s ease-in-out infinite;
+          ">👑</div>
+          <style>
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-4px); }
+            }
+          </style>
+        </div>
+      `;
+    }
+    // Gratuito: Cuadrado pequeño (36px)
     else {
       const darkerColor = adjustColor(color, -20);
       el.innerHTML = `
@@ -203,8 +263,8 @@ export default function MapboxMap({
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 28px;
-          height: 28px;
+          width: 36px;
+          height: 36px;
           cursor: pointer;
           filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -214,8 +274,8 @@ export default function MapboxMap({
           <!-- Fondo degradado -->
           <div style="
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, ${color}, ${darkerColor});
             border-radius: 6px;
             z-index: 1;
@@ -223,23 +283,23 @@ export default function MapboxMap({
           <!-- Brillo/shine -->
           <div style="
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: 36px;
+            height: 36px;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent);
             border-radius: 6px;
             z-index: 2;
           "></div>
           <!-- Emoji con backdrop -->
           <div style="
-            font-size: 14px;
+            font-size: 18px;
             z-index: 3;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
           ">${icon}</div>
           <!-- Borde blanco suave -->
           <div style="
             position: absolute;
-            width: 28px;
-            height: 28px;
+            width: 36px;
+            height: 36px;
             border: 1px solid rgba(255, 255, 255, 0.6);
             border-radius: 6px;
             z-index: 4;
