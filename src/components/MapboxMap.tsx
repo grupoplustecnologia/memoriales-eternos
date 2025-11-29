@@ -124,7 +124,7 @@ export default function MapboxMap({
             box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.1);
             z-index: 3;
           "/>
-          <!-- Badge premium -->
+          <!-- Badge vela -->
           <div style="
             position: absolute;
             top: -4px;
@@ -139,11 +139,11 @@ export default function MapboxMap({
             font-size: 12px;
             border: 2px solid white;
             z-index: 4;
-          ">👑</div>
+          ">🕯️</div>
         </div>
       `;
     }
-    // Cielo de Estrellas: Cuadrado con borde azul y estrella
+    // Cielo de Estrellas: Cuadrado con borde azul y vela
     else if (userPlan === 'cielo-estrellas') {
       el.innerHTML = `
         <div style="
@@ -178,13 +178,13 @@ export default function MapboxMap({
             box-shadow: inset 0 0 12px rgba(14, 165, 233, 0.2);
             z-index: 2;
           "></div>
-          <!-- Star icon -->
+          <!-- Vela icon con animación -->
           <div style="
             font-size: 28px;
             z-index: 3;
             text-shadow: 0 2px 4px rgba(6, 182, 212, 0.3);
             animation: pulse-star 2s infinite;
-          ">⭐</div>
+          ">🕯️</div>
           <style>
             @keyframes pulse-star {
               0%, 100% { transform: scale(1); }
@@ -194,7 +194,7 @@ export default function MapboxMap({
         </div>
       `;
     }
-    // Gratuito: Teardrop con emoji (default)
+    // Gratuito: Cuadrado pequeño (mitad de tamaño)
     else {
       const darkerColor = adjustColor(color, -20);
       el.innerHTML = `
@@ -203,45 +203,45 @@ export default function MapboxMap({
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 56px;
-          height: 56px;
+          width: 28px;
+          height: 28px;
           cursor: pointer;
-          filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+          filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         "
-        onmouseover="this.style.transform='scale(1.15) translateY(-8px)'; this.style.filter='drop-shadow(0 12px 24px rgba(0, 0, 0, 0.25))'"
-        onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15))'">
+        onmouseover="this.style.transform='scale(1.15) translateY(-4px)'; this.style.filter='drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25))'"
+        onmouseout="this.style.transform='scale(1)'; this.style.filter='drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15))'">
           <!-- Fondo degradado -->
           <div style="
             position: absolute;
-            width: 56px;
-            height: 56px;
+            width: 28px;
+            height: 28px;
             background: linear-gradient(135deg, ${color}, ${darkerColor});
-            border-radius: 14px;
+            border-radius: 6px;
             z-index: 1;
           "></div>
           <!-- Brillo/shine -->
           <div style="
             position: absolute;
-            width: 56px;
-            height: 56px;
+            width: 28px;
+            height: 28px;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent);
-            border-radius: 14px;
+            border-radius: 6px;
             z-index: 2;
           "></div>
           <!-- Emoji con backdrop -->
           <div style="
-            font-size: 28px;
+            font-size: 14px;
             z-index: 3;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
           ">${icon}</div>
           <!-- Borde blanco suave -->
           <div style="
             position: absolute;
-            width: 56px;
-            height: 56px;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            border-radius: 14px;
+            width: 28px;
+            height: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
             z-index: 4;
           "></div>
         </div>
