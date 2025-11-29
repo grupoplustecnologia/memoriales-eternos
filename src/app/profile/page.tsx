@@ -144,59 +144,6 @@ export default function ProfilePage() {
     return 'Gratuito';
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
-            <p className="text-center mb-4">Debes iniciar sesión para ver tu perfil</p>
-            <Link href="/auth/login">
-              <Button className="w-full bg-nature-600 hover:bg-nature-700">
-                Ir a Iniciar Sesión
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const handleSaveProfile = async () => {
-    setIsSaving(true);
-    const result = await updateProfile({
-      name: editForm.name,
-      profilePicture: editForm.profilePicture
-    });
-    if (result.success) {
-      setIsEditing(false);
-    }
-    setIsSaving(false);
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    router.push('/');
-  };
-
-  const getTributeBadge = (type: string) => {
-    const badges: Record<string, { emoji: string; label: string; color: string }> = {
-      flower: { emoji: '🌸', label: 'Flor', color: 'bg-pink-100 text-pink-800' },
-      candle: { emoji: '🕯️', label: 'Vela', color: 'bg-orange-100 text-orange-800' },
-      message: { emoji: '💬', label: 'Mensaje', color: 'bg-blue-100 text-blue-800' }
-    };
-    return badges[type] || badges.flower;
-  };
-
-  const getActionEmoji = (action: string) => {
-    const emojis: Record<string, string> = {
-      memorial_created: '✨',
-      tribute_received: '🎁',
-      profile_updated: '👤',
-      shared: '📤'
-    };
-    return emojis[action] || '📝';
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-nature-50 to-sky-50 py-8">
       <div className="container mx-auto px-4 max-w-4xl">
