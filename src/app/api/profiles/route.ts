@@ -1,4 +1,4 @@
-import { getProfiles, createProfile, updateProfile, deleteProfile } from '@/lib/profilesService';
+import { createProfile, updateProfile, deleteProfile } from '@/lib/profilesService';
 import { verifySessionToken } from '@/lib/auth';
 import { PlanPermissionsService } from '@/lib/planPermissions';
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,15 +11,9 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const publicOnly = url.searchParams.get('public') === 'true';
     const pageParam = url.searchParams.get('page');
-    const limitParam = url.searchParams.get('limit') || '50';
+    const limitParam = url.searchParams.get('limit');
 
-    // If no pagination requested, use old behavior (for compatibility)
-    if (!pageParam && !limitParam) {
-      const result = await getProfiles(publicOnly);
-      return NextResponse.json(result);
-    }
-
-    const { page, limit } = getPaginationParams(pageParam || '1', limitParam);
+    const { page, limit } = getPaginationParams(pageParam || '1', limitParam || '50');
     const cacheKey = publicOnly ? `${cacheKeys.profiles(page, limit)}:public` : cacheKeys.profiles(page, limit);
 
     // Try cache first
@@ -32,7 +26,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Fetch paginated results
+    // Fetch paginated results - simplified query
     const [data, total] = await Promise.all([
       prisma.animalProfile.findMany({
         where: publicOnly ? { isPublic: true } : {},
@@ -56,6 +50,7 @@ export async function GET(req: NextRequest) {
             },
           },
         },
+        orderBy: { createdAt: 'desc' }
       }),
       prisma.animalProfile.count({
         where: publicOnly ? { isPublic: true } : {},
@@ -79,7 +74,7 @@ export async function GET(req: NextRequest) {
     console.error('GET /api/profiles error:', error);
     return NextResponse.json({
       success: false,
-      error: 'Error fetching profiles'
+      error: error instanceof Error ? error.message : 'Error fetching profiles'
     }, { status: 500 });
   }
 }
@@ -109,8 +104,11 @@ export async function POST(req: NextRequest) {
     const user = authResult.user;
 
     const userPlan = user.subscriptionTier as any || 'huella-eterna';
-    const userMemorials = await getProfiles(); // obtener todos los memoriales del usuario
-    const userMemorialCount = userMemorials.data?.filter((p: any) => p.userId === user.id).length || 0;
+    
+    // Get user memorial count
+    const userMemorialCount = await prisma.animalProfile.count({
+      where: { userId: user.id }
+    });
     
     if (!PlanPermissionsService.canCreateMemorial(userPlan, userMemorialCount)) {
       const permissions = PlanPermissionsService.getPermissions(userPlan);
