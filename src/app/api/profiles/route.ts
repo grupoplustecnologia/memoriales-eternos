@@ -3,6 +3,7 @@ import { verifySessionToken } from '@/lib/auth';
 import { PlanPermissionsService } from '@/lib/planPermissions';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCached, setCached, cacheKeys, getPaginationParams, calculatePagination } from '@/lib/cache';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(req: NextRequest) {
   try {
@@ -32,7 +33,6 @@ export async function GET(req: NextRequest) {
     }
 
     // Fetch paginated results
-    const { prisma } = await import('@/lib/prisma');
     const [data, total] = await Promise.all([
       prisma.animalProfile.findMany({
         where: publicOnly ? { isPublic: true } : {},
