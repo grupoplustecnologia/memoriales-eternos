@@ -1,7 +1,24 @@
 /** @type {import('next').NextConfig} */
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig = {
   allowedDevOrigins: ["*.preview.same-app.com"],
   reactStrictMode: false, // Disabled to fix Leaflet MapContainer double-initialization issue
+  
+  // Bundle optimization
+  productionBrowserSourceMaps: false, // Disable source maps in production (saves ~100kb)
+  
+  // Experimental optimizations for better tree-shaking
+  experimental: {
+    optimizePackageImports: [
+      '@radix-ui/react-icons',
+      '@radix-ui/react-dialog',
+      'lucide-react'
+    ],
+  },
+
   images: {
     unoptimized: false, // Enable image optimization
     remotePatterns: [
@@ -31,6 +48,19 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
+
+  // Webpack optimization for client bundles
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Client-side optimizations
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+      };
+    }
+    return config;
+  },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function ClientBody({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Remove any extension-added classes during hydration
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    // This runs only on the client after hydration
+    setMounted(true);
     document.body.className = "antialiased";
   }, []);
 
-  return <div className="antialiased">{children}</div>;
+  // Return children immediately for server hydration, then mount client-side
+  return <div className="antialiased" data-mounted={mounted}>{children}</div>;
 }
