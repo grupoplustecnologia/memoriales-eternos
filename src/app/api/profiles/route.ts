@@ -2,14 +2,75 @@ import { getProfiles, createProfile, updateProfile, deleteProfile } from '@/lib/
 import { verifySessionToken } from '@/lib/auth';
 import { PlanPermissionsService } from '@/lib/planPermissions';
 import { NextRequest, NextResponse } from 'next/server';
+import { getCached, setCached, cacheKeys, getPaginationParams, calculatePagination } from '@/lib/cache';
 
 export async function GET(req: NextRequest) {
   try {
     // Check if we should only return public profiles (for /map page)
     const url = new URL(req.url);
     const publicOnly = url.searchParams.get('public') === 'true';
-    
-    const result = await getProfiles(publicOnly);
+    const pageParam = url.searchParams.get('page');
+    const limitParam = url.searchParams.get('limit') || '50';
+
+    // If no pagination requested, use old behavior (for compatibility)
+    if (!pageParam && !limitParam) {
+      const result = await getProfiles(publicOnly);
+      return NextResponse.json(result);
+    }
+
+    const { page, limit } = getPaginationParams(pageParam || '1', limitParam);
+    const cacheKey = publicOnly ? `${cacheKeys.profiles(page, limit)}:public` : cacheKeys.profiles(page, limit);
+
+    // Try cache first
+    let cached = await getCached(cacheKey);
+    if (cached) {
+      return NextResponse.json({
+        success: true,
+        cached: true,
+        ...cached,
+      });
+    }
+
+    // Fetch paginated results
+    const { prisma } = await import('@/lib/prisma');
+    const [data, total] = await Promise.all([
+      prisma.animalProfile.findMany({
+        where: publicOnly ? { isPublic: true } : {},
+        skip: (page - 1) * limit,
+        take: limit,
+        select: {
+          id: true,
+          name: true,
+          photoUrl: true,
+          animalType: true,
+          deathDate: true,
+          viewCount: true,
+          user: {
+            select: { name: true },
+          },
+          _count: {
+            select: {
+              tributes: true,
+              likes: true,
+              comments: true,
+            },
+          },
+        },
+      }),
+      prisma.animalProfile.count({
+        where: publicOnly ? { isPublic: true } : {},
+      }),
+    ]);
+
+    const result = {
+      success: true,
+      data,
+      pagination: calculatePagination(page, limit, total),
+    };
+
+    // Cache for 5 minutes
+    await setCached(cacheKey, result, 300);
+
     return NextResponse.json(result);
   } catch (error) {
     console.error('GET /api/profiles error:', error);
