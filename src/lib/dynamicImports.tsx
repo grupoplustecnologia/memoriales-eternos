@@ -28,7 +28,7 @@ export const DynamicInteractiveMap = dynamic(() => import('@/components/Interact
  * Lazy load MapboxMap component
  * Only needed on map pages, reduces initial bundle
  */
-export const DynamicMapboxMap = dynamic(() => import('@/components/MapboxMap'), {
+export const DynamicMapboxMap = dynamic(() => import('@/components/MapboxMap').then(mod => ({ default: mod.MapboxMap })), {
   loading: () => <ComponentLoader />,
   ssr: false
 });
@@ -37,7 +37,7 @@ export const DynamicMapboxMap = dynamic(() => import('@/components/MapboxMap'), 
  * Lazy load CommentsSection component
  * These are below the fold in most cases
  */
-export const DynamicCommentsSection = dynamic(() => import('@/components/CommentsSection'), {
+export const DynamicCommentsSection = dynamic(() => import('@/components/CommentsSection').then(mod => ({ default: mod.CommentsSection })), {
   loading: () => <div className="h-32 bg-gray-100 animate-pulse rounded-lg" />,
   ssr: false
 });
@@ -45,7 +45,7 @@ export const DynamicCommentsSection = dynamic(() => import('@/components/Comment
 /**
  * Lazy load ReactionsPanel component
  */
-export const DynamicReactionsPanel = dynamic(() => import('@/components/ReactionsPanel'), {
+export const DynamicReactionsPanel = dynamic(() => import('@/components/ReactionsPanel').then(mod => ({ default: mod.ReactionsPanel })), {
   loading: () => <div className="h-12 bg-gray-100 animate-pulse rounded-lg" />,
   ssr: false
 });
