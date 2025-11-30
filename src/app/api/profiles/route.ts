@@ -64,7 +64,10 @@ export async function GET(req: NextRequest) {
 
     const result = {
       success: true,
-      data,
+      data: data.map((item: any) => ({
+        ...item,
+        deathDate: item.deathDate instanceof Date ? item.deathDate.toISOString() : item.deathDate,
+      })),
       pagination: calculatePagination(page, limit, total),
     };
 

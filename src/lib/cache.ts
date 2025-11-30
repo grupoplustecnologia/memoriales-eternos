@@ -77,7 +77,14 @@ export async function setCached<T>(
     const kv = await getKvClient();
     if (kv) {
       try {
-        await kv.setex(key, ttlSeconds, JSON.stringify(value));
+        // Use replacer to handle Date objects
+        const serialized = JSON.stringify(value, (key, val) => {
+          if (val instanceof Date) {
+            return val.toISOString();
+          }
+          return val;
+        });
+        await kv.setex(key, ttlSeconds, serialized);
         return;
       } catch (error) {
         console.error('KV set error:', error);
