@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
+import OptimizedImage from '@/components/OptimizedImage';
 
 export default function Home() {
   const [count, setCount] = useState(0);
@@ -155,21 +156,30 @@ export default function Home() {
             <div className="pt-8 flex items-center justify-center gap-8 text-white/80 text-sm">
               <div className="flex items-center gap-2">
                 <div className="flex -space-x-2">
-                  <img
-                    src="https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=40&h=40&fit=crop"
-                    className="w-8 h-8 rounded-full border-2 border-white"
-                    alt="User"
-                  />
-                  <img
-                    src="https://images.unsplash.com/photo-1513245543132-31f507417b26?w=40&h=40&fit=crop"
-                    className="w-8 h-8 rounded-full border-2 border-white"
-                    alt="User"
-                  />
-                  <img
-                    src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=40&h=40&fit=crop"
-                    className="w-8 h-8 rounded-full border-2 border-white"
-                    alt="User"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=40&h=40&fit=crop"
+      alt="User"
+      width={640}
+      height={480} priority={true}
+      className="w-8 h-8 rounded-full border-2 border-white"
+      objectFit="cover"
+    />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1513245543132-31f507417b26?w=40&h=40&fit=crop"
+      alt="User"
+      width={640}
+      height={480} priority={true}
+      className="w-8 h-8 rounded-full border-2 border-white"
+      objectFit="cover"
+    />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=40&h=40&fit=crop"
+      alt="User"
+      width={640}
+      height={480}
+      className="w-8 h-8 rounded-full border-2 border-white"
+      objectFit="cover"
+    />
                 </div>
                 <span>Únete a miles de familias</span>
               </div>
@@ -426,11 +436,14 @@ export default function Home() {
           </div>
 
           <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white group">
-            <img
-              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1200"
-              alt="Mapa del mundo"
-              className="w-full h-[500px] object-cover"
-            />
+            <OptimizedImage
+      src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1200"
+      alt="Mapa del mundo"
+      width={640}
+      height={480}
+      className="w-full h-[500px] object-cover"
+      objectFit="cover"
+    />
             <div className="absolute inset-0 bg-gradient-to-t from-nature-900/90 via-nature-900/30 to-transparent flex items-end justify-center pb-12">
               <Link href="/map">
                 <Button size="lg" className="bg-white text-nature-800 hover:bg-nature-50 px-10 py-6 text-lg shadow-2xl hover:scale-105 transition-all duration-300">
@@ -442,11 +455,14 @@ export default function Home() {
             {/* Floating Memorial Cards */}
             <div className="absolute top-8 left-8 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-xl max-w-xs transform hover:scale-105 transition-transform duration-300">
               <div className="flex items-start gap-3">
-                <img
-                  src="https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=60&h=60&fit=crop"
-                  className="w-16 h-16 rounded-lg object-cover"
-                  alt="Max"
-                />
+                <OptimizedImage
+      src="https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=60&h=60&fit=crop"
+      alt="Max"
+      width={640}
+      height={480}
+      className="w-16 h-16 rounded-lg object-cover"
+      objectFit="cover"
+    />
                 <div>
                   <h4 className="font-bold text-nature-800">Max</h4>
                   <p className="text-sm text-nature-600">Golden Retriever</p>
@@ -457,11 +473,14 @@ export default function Home() {
 
             <div className="absolute bottom-8 right-8 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-xl max-w-xs transform hover:scale-105 transition-transform duration-300">
               <div className="flex items-start gap-3">
-                <img
-                  src="https://images.unsplash.com/photo-1513245543132-31f507417b26?w=60&h=60&fit=crop"
-                  className="w-16 h-16 rounded-lg object-cover"
-                  alt="Luna"
-                />
+                <OptimizedImage
+      src="https://images.unsplash.com/photo-1513245543132-31f507417b26?w=60&h=60&fit=crop"
+      alt="Luna"
+      width={640}
+      height={480}
+      className="w-16 h-16 rounded-lg object-cover"
+      objectFit="cover"
+    />
                 <div>
                   <h4 className="font-bold text-nature-800">Luna</h4>
                   <p className="text-sm text-nature-600">Siamés</p>
@@ -495,11 +514,14 @@ export default function Home() {
                   <Card className="bg-white border-nature-200 overflow-hidden">
                     <div className="grid md:grid-cols-2 gap-0">
                       <div className="h-80 md:h-auto overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=600"
-                          alt="Max"
-                          className="w-full h-full object-cover"
-                        />
+                        <OptimizedImage
+      src="https://images.unsplash.com/photo-1633722715463-d30f4f325e24?w=600"
+      alt="Max"
+      width={640}
+      height={480}
+      className="w-full h-full object-cover"
+      objectFit="cover"
+    />
                       </div>
                       <CardContent className="p-8 md:p-12 flex flex-col justify-center">
                         <div className="flex text-yellow-500 mb-4 text-xl">
@@ -529,11 +551,14 @@ export default function Home() {
                   <Card className="bg-white border-sky-200 overflow-hidden">
                     <div className="grid md:grid-cols-2 gap-0">
                       <div className="h-80 md:h-auto overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1513245543132-31f507417b26?w=600"
-                          alt="Luna"
-                          className="w-full h-full object-cover"
-                        />
+                        <OptimizedImage
+      src="https://images.unsplash.com/photo-1513245543132-31f507417b26?w=600"
+      alt="Luna"
+      width={640}
+      height={480}
+      className="w-full h-full object-cover"
+      objectFit="cover"
+    />
                       </div>
                       <CardContent className="p-8 md:p-12 flex flex-col justify-center">
                         <div className="flex text-yellow-500 mb-4 text-xl">
@@ -563,11 +588,14 @@ export default function Home() {
                   <Card className="bg-white border-golden-200 overflow-hidden">
                     <div className="grid md:grid-cols-2 gap-0">
                       <div className="h-80 md:h-auto overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=600"
-                          alt="Rocky"
-                          className="w-full h-full object-cover"
-                        />
+                        <OptimizedImage
+      src="https://images.unsplash.com/photo-1568572933382-74d440642117?w=600"
+      alt="Rocky"
+      width={640}
+      height={480}
+      className="w-full h-full object-cover"
+      objectFit="cover"
+    />
                       </div>
                       <CardContent className="p-8 md:p-12 flex flex-col justify-center">
                         <div className="flex text-yellow-500 mb-4 text-xl">
@@ -597,11 +625,14 @@ export default function Home() {
                   <Card className="bg-white border-nature-200 overflow-hidden">
                     <div className="grid md:grid-cols-2 gap-0">
                       <div className="h-80 md:h-auto overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600"
-                          alt="Milo"
-                          className="w-full h-full object-cover"
-                        />
+                        <OptimizedImage
+      src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=600"
+      alt="Milo"
+      width={640}
+      height={480}
+      className="w-full h-full object-cover"
+      objectFit="cover"
+    />
                       </div>
                       <CardContent className="p-8 md:p-12 flex flex-col justify-center">
                         <div className="flex text-yellow-500 mb-4 text-xl">
@@ -631,11 +662,14 @@ export default function Home() {
                   <Card className="bg-white border-sky-200 overflow-hidden">
                     <div className="grid md:grid-cols-2 gap-0">
                       <div className="h-80 md:h-auto overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600"
-                          alt="Duke"
-                          className="w-full h-full object-cover"
-                        />
+                        <OptimizedImage
+      src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600"
+      alt="Duke"
+      width={640}
+      height={480}
+      className="w-full h-full object-cover"
+      objectFit="cover"
+    />
                       </div>
                       <CardContent className="p-8 md:p-12 flex flex-col justify-center">
                         <div className="flex text-yellow-500 mb-4 text-xl">
@@ -665,11 +699,14 @@ export default function Home() {
                   <Card className="bg-white border-golden-200 overflow-hidden">
                     <div className="grid md:grid-cols-2 gap-0">
                       <div className="h-80 md:h-auto overflow-hidden">
-                        <img
-                          src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=600"
-                          alt="Bella"
-                          className="w-full h-full object-cover"
-                        />
+                        <OptimizedImage
+      src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=600"
+      alt="Bella"
+      width={640}
+      height={480}
+      className="w-full h-full object-cover"
+      objectFit="cover"
+    />
                       </div>
                       <CardContent className="p-8 md:p-12 flex flex-col justify-center">
                         <div className="flex text-yellow-500 mb-4 text-xl">
@@ -728,11 +765,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-nature-50 to-nature-100 border-nature-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1615789591457-74a63395c990?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Simba"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1615789591457-74a63395c990?w=50&h=50&fit=crop"
+      alt="Simba"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Pedro S.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -749,11 +789,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Charlie"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=50&h=50&fit=crop"
+      alt="Charlie"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Emily R.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -770,11 +813,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-golden-50 to-golden-100 border-golden-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Shadow"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=50&h=50&fit=crop"
+      alt="Shadow"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Dmitri K.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -791,11 +837,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-nature-50 to-nature-100 border-nature-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Toby"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=50&h=50&fit=crop"
+      alt="Toby"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Klaus M.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -812,11 +861,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1606214174585-fe31582dc6ee?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Nala"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1606214174585-fe31582dc6ee?w=50&h=50&fit=crop"
+      alt="Nala"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Wei L.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -833,11 +885,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-golden-50 to-golden-100 border-golden-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Bruno"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=50&h=50&fit=crop"
+      alt="Bruno"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">João P.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -854,11 +909,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-nature-50 to-nature-100 border-nature-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1560807707-8cc77767d783?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Zeus"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1560807707-8cc77767d783?w=50&h=50&fit=crop"
+      alt="Zeus"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Nikos A.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -875,11 +933,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Daisy"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=50&h=50&fit=crop"
+      alt="Daisy"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Lisa M.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -896,11 +957,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-golden-50 to-golden-100 border-golden-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Coco"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=50&h=50&fit=crop"
+      alt="Coco"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Lucía F.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -917,11 +981,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-nature-50 to-nature-100 border-nature-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Oliver"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=50&h=50&fit=crop"
+      alt="Oliver"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Erik H.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -938,11 +1005,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1612363148951-07c58e412d1d?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Whiskers"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1612363148951-07c58e412d1d?w=50&h=50&fit=crop"
+      alt="Whiskers"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Aoife O.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -959,11 +1029,14 @@ export default function Home() {
             <Card className="bg-gradient-to-br from-golden-50 to-golden-100 border-golden-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="https://images.unsplash.com/photo-1580157730183-80dc8b7a59e5?w=50&h=50&fit=crop"
-                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                    alt="Piolin"
-                  />
+                  <OptimizedImage
+      src="https://images.unsplash.com/photo-1580157730183-80dc8b7a59e5?w=50&h=50&fit=crop"
+      alt="Piolin"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                   <div>
                     <p className="font-semibold text-nature-800 text-sm">Rosa M.</p>
                     <div className="flex text-yellow-500 text-xs">★★★★★</div>

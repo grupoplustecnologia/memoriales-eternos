@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import OptimizedImage from '@/components/OptimizedImage';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -174,11 +175,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-nature-50 to-nature-100 border-nature-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1615789591457-74a63395c990?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Simba"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1615789591457-74a63395c990?w=50&h=50&fit=crop"
+      alt="Simba"
+      width={640}
+      height={480} priority={true}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">Pedro S.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -195,11 +199,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Charlie"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=50&h=50&fit=crop"
+      alt="Charlie"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">Emily R.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -216,11 +223,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-golden-50 to-golden-100 border-golden-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Shadow"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=50&h=50&fit=crop"
+      alt="Shadow"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">Dmitri K.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -237,11 +247,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-nature-50 to-nature-100 border-nature-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Toby"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=50&h=50&fit=crop"
+      alt="Toby"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">Klaus M.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -258,11 +271,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1606214174585-fe31582dc6ee?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Nala"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1606214174585-fe31582dc6ee?w=50&h=50&fit=crop"
+      alt="Nala"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">Wei L.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -279,11 +295,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-golden-50 to-golden-100 border-golden-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Bruno"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=50&h=50&fit=crop"
+      alt="Bruno"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">João P.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -300,11 +319,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-nature-50 to-nature-100 border-nature-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1560807707-8cc77767d783?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Zeus"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1560807707-8cc77767d783?w=50&h=50&fit=crop"
+      alt="Zeus"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">Sofía M.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
@@ -321,11 +343,14 @@ export default function TrendingPage() {
               <Card className="bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:shadow-xl hover:scale-105 transition-all duration-300">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src="https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=50&h=50&fit=crop"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
-                      alt="Luna"
-                    />
+                    <OptimizedImage
+      src="https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=50&h=50&fit=crop"
+      alt="Luna"
+      width={640}
+      height={480}
+      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+      objectFit="cover"
+    />
                     <div>
                       <p className="font-semibold text-nature-800 text-sm">Marco L.</p>
                       <div className="flex text-yellow-500 text-xs">★★★★★</div>
