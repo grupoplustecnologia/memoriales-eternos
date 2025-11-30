@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import type { AnimalProfile } from '@/types';
@@ -99,6 +100,8 @@ export default function MapPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-background to-background/95 flex flex-col">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/map" />
+
       {/* Header - Moderno */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-nature-600/20 via-sky-500/20 to-nature-500/20 backdrop-blur-3xl"></div>

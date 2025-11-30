@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
@@ -23,6 +24,8 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nature-50 to-sky-50">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/dashboard" />
+
         <div className="text-center">
           <div className="animate-spin inline-block w-12 h-12 border-4 border-nature-600 border-t-transparent rounded-full"></div>
           <p className="mt-4 text-gray-600">Cargando dashboard...</p>

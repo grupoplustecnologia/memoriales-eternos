@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { CanonicalHead } from '@/components/CanonicalHead';
 
 export default function TrendingDebug() {
   const [memorials, setMemorials] = useState<any[]>([]);
@@ -27,6 +28,8 @@ export default function TrendingDebug() {
 
   return (
     <div className="p-8">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/trending-debug" />
+
       <h1 className="text-2xl font-bold mb-4">Debug Trending</h1>
       
       {loading && <p className="text-blue-600">Loading...</p>}

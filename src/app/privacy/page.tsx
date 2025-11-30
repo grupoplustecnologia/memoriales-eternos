@@ -1,10 +1,13 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { CanonicalHead } from '@/components/CanonicalHead';
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-nature-50">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/privacy" />
+
       {/* Header */}
       <div className="bg-gradient-to-r from-nature-600 to-sky-600 text-white py-12 md:py-16">
         <div className="container mx-auto px-4 max-w-4xl">

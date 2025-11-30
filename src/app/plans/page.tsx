@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Button } from '@/components/ui/button';
 import { PLANS } from '@/types/index';
 
@@ -19,6 +20,8 @@ export default function PlansPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-50">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/plans" />
+
       {/* Header */}
       <section className="py-16 px-4 text-center border-b border-sky-200">
         <h1 className="text-5xl font-bold text-sky-900 mb-4">

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import OptimizedImage from '@/components/OptimizedImage';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +17,8 @@ export default function TrendingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-nature-50 py-8">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/trending" />
+
       <div className="container max-w-6xl mx-auto px-4 space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">

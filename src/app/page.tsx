@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import OptimizedImage from '@/components/OptimizedImage';
+import { CanonicalHead } from '@/components/CanonicalHead';
 
 export default function Home() {
   const [count, setCount] = useState(0);
@@ -91,6 +92,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com" />
       {/* Hero Section with Background */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         {/* Background Image with Overlay */}

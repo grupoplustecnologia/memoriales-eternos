@@ -3,6 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Card, CardContent } from '@/components/ui/card';
 import CreateFormContent from './CreateFormContent';
 
@@ -11,6 +12,8 @@ export default function CreatePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-nature-50 to-sky-50 py-12">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/create" />
+
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">

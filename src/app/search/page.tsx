@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -33,6 +34,8 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-nature-50 py-8">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/search" />
+
       <div className="container max-w-4xl mx-auto px-4 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">

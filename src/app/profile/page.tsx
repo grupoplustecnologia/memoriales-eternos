@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -92,6 +93,8 @@ export default function ProfilePage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/profile" />
+
         <Card className="w-full max-w-md">
           <CardContent className="pt-6">
             <p className="text-center mb-4">Debes iniciar sesión para ver tu perfil</p>

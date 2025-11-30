@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PLANS } from '@/lib/stripe';
@@ -78,6 +79,8 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-nature-50 to-sky-50">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/pricing" />
+
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">

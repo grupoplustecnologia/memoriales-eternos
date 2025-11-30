@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PLANS } from '@/lib/stripe';
@@ -36,6 +37,8 @@ export default function SubscriptionPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 to-blue-50">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/subscription" />
+
         <Card className="w-full max-w-md">
           <CardContent className="pt-6">
             <p className="text-center mb-4">Debes iniciar sesión para ver tu suscripción</p>

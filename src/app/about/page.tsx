@@ -1,10 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-nature-50">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/about" />
+
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-nature-600 to-sky-600 text-white py-16 md:py-24">
         <div className="container mx-auto px-4 max-w-4xl text-center">

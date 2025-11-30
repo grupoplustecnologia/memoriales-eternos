@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { CanonicalHead } from '@/components/CanonicalHead';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -108,6 +109,8 @@ export default function MyMemorialsPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center">
+      <CanonicalHead url="https://cementerio-virtual-mascotas.com/my-memorials" />
+
         <Card className="w-full max-w-md">
           <CardContent className="pt-6">
             <p className="text-center mb-4">Debes iniciar sesión</p>
