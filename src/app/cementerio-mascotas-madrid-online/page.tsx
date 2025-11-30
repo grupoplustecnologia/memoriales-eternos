@@ -3,10 +3,29 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { SchemaHead } from '@/components/SchemaHead';
+import { CanonicalHead } from '@/components/CanonicalHead';
+import { generateLocalBusinessSchema, generateBreadcrumbSchema, generateFAQSchema, generateWebPageSchema } from '@/lib/schema';
+import { getCanonicalUrl, getOgImageUrl } from '@/lib/seo';
 
-export default function CementerioMascotasMadridOnline() {
+
+const pageSlug = 'cementerio-mascotas-madrid-online';
+const canonical = getCanonicalUrl(`/${pageSlug}`);
+const ogImage = getOgImageUrl(pageSlug, 'landing');
+
+const breadcrumbs = [{ name: 'Home', url: 'https://memorias-eternas.app' }, { name: 'Cementerio Mascotas Madrid Online', url: canonical }];
+const faqs = [{ question: '¿Puedo crear un memorial?', answer: 'Sí, completamente.' }, { question: '¿Es gratis?', answer: 'Sí.' }, { question: '¿Puedo compartir?', answer: 'Sí.' }];
+
+export default function Page() {
+  const localBusinessSchema = generateLocalBusinessSchema('Cementerio Mascotas Madrid Online');
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+  const faqSchema = generateFAQSchema(faqs);
+  const webPageSchema = generateWebPageSchema('Cementerio Mascotas Madrid Online - Forever Pet Friend', 'Memorial para mascotas.', canonical, ogImage);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
+      <CanonicalHead url={canonical} />
+      <SchemaHead schemas={[localBusinessSchema, breadcrumbSchema, faqSchema, webPageSchema]} />
       <div className="relative h-[500px] bg-gradient-to-r from-red-600 via-yellow-400 to-red-600 overflow-hidden">
         <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url('https://images.unsplash.com/photo-1587300411107-ec5ff141dd51?w=1200&q=80')`, backgroundSize: 'cover', backgroundPosition: 'center'}} />
         <div className="absolute inset-0 bg-gradient-to-r from-red-900/80 via-yellow-900/80 to-red-900/80" />

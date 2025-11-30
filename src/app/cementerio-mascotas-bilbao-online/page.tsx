@@ -3,10 +3,29 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { SchemaHead } from '@/components/SchemaHead';
+import { CanonicalHead } from '@/components/CanonicalHead';
+import { generateLocalBusinessSchema, generateBreadcrumbSchema, generateFAQSchema, generateWebPageSchema } from '@/lib/schema';
+import { getCanonicalUrl, getOgImageUrl } from '@/lib/seo';
 
-export default function CementerioMascotasBilbaoOnline() {
+
+const pageSlug = 'cementerio-mascotas-bilbao-online';
+const canonical = getCanonicalUrl(`/${pageSlug}`);
+const ogImage = getOgImageUrl(pageSlug, 'landing');
+
+const breadcrumbs = [{ name: 'Home', url: 'https://memorias-eternas.app' }, { name: 'Cementerio Mascotas Bilbao Online', url: canonical }];
+const faqs = [{ question: '¿Puedo crear un memorial?', answer: 'Sí, completamente.' }, { question: '¿Es gratis?', answer: 'Sí.' }, { question: '¿Puedo compartir?', answer: 'Sí.' }];
+
+export default function Page() {
+  const localBusinessSchema = generateLocalBusinessSchema('Cementerio Mascotas Bilbao Online');
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+  const faqSchema = generateFAQSchema(faqs);
+  const webPageSchema = generateWebPageSchema('Cementerio Mascotas Bilbao Online - Forever Pet Friend', 'Memorial para mascotas.', canonical, ogImage);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
+      <CanonicalHead url={canonical} />
+      <SchemaHead schemas={[localBusinessSchema, breadcrumbSchema, faqSchema, webPageSchema]} />
       <div className="relative h-[500px] bg-gradient-to-r from-green-600 via-emerald-500 to-green-600 overflow-hidden">
         <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url('https://images.unsplash.com/photo-1587300411107-ec5ff141dd51?w=1200&q=80')`, backgroundSize: 'cover', backgroundPosition: 'center'}} />
         <div className="absolute inset-0 bg-gradient-to-r from-green-900/80 via-emerald-900/80 to-green-900/80" />

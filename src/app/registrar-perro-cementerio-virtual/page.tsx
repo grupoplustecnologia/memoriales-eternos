@@ -4,10 +4,29 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { SchemaHead } from '@/components/SchemaHead';
+import { CanonicalHead } from '@/components/CanonicalHead';
+import { generateLocalBusinessSchema, generateBreadcrumbSchema, generateFAQSchema, generateWebPageSchema } from '@/lib/schema';
+import { getCanonicalUrl, getOgImageUrl } from '@/lib/seo';
 
-export default function RegistrarPerroCementerioVirtual() {
+
+const pageSlug = 'registrar-perro-cementerio-virtual';
+const canonical = getCanonicalUrl(`/${pageSlug}`);
+const ogImage = getOgImageUrl(pageSlug, 'landing');
+
+const breadcrumbs = [{ name: 'Home', url: 'https://memorias-eternas.app' }, { name: 'Registrar Perro Cementerio Virtual', url: canonical }];
+const faqs = [{ question: '¿Puedo crear un memorial?', answer: 'Sí, completamente.' }, { question: '¿Es gratis?', answer: 'Sí.' }, { question: '¿Puedo compartir?', answer: 'Sí.' }];
+
+export default function Page() {
+  const localBusinessSchema = generateLocalBusinessSchema('Registrar Perro Cementerio Virtual');
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+  const faqSchema = generateFAQSchema(faqs);
+  const webPageSchema = generateWebPageSchema('Registrar Perro Cementerio Virtual - Forever Pet Friend', 'Memorial para mascotas.', canonical, ogImage);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
+      <CanonicalHead url={canonical} />
+      <SchemaHead schemas={[localBusinessSchema, breadcrumbSchema, faqSchema, webPageSchema]} />
       {/* Hero Section */}
       <div className="relative h-[500px] bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 overflow-hidden">
         <div
