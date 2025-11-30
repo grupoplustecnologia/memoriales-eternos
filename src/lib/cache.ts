@@ -9,19 +9,47 @@ import { revalidateTag } from 'next/cache';
 // In-memory cache for development (auto-resets on file changes)
 const memoryCache = new Map<string, { data: unknown; expires: number }>();
 
+// Lazy load Vercel KV
+let kvClient: any = null;
+let kvInitialized = false;
+
+async function getKvClient() {
+  if (kvInitialized) return kvClient;
+  
+  if (process.env.KV_URL) {
+    try {
+      const { kv } = await import('@vercel/kv');
+      kvClient = kv;
+      kvInitialized = true;
+      return kvClient;
+    } catch (error) {
+      console.error('Failed to initialize KV:', error);
+      kvInitialized = true; // Mark as initialized to avoid retrying
+      return null;
+    }
+  }
+  
+  kvInitialized = true;
+  return null;
+}
+
 /**
  * Get value from cache
  */
 export async function getCached<T>(key: string): Promise<T | null> {
   try {
-    // Try Vercel KV first if available
-    if (process.env.KV_URL) {
-      const { kv } = await import('@vercel/kv');
-      const cached = await kv.get(key);
-      return cached as T | null;
+    const kv = await getKvClient();
+    if (kv) {
+      try {
+        const cached = await kv.get(key);
+        return cached as T | null;
+      } catch (error) {
+        console.error('KV get error:', error);
+        // Fall through to memory cache
+      }
     }
-  } catch {
-    // Fallback to memory cache
+  } catch (error) {
+    console.error('Error getting KV client:', error);
   }
 
   // Fallback to memory cache
@@ -46,14 +74,18 @@ export async function setCached<T>(
   ttlSeconds: number = 300
 ): Promise<void> {
   try {
-    // Try Vercel KV first if available
-    if (process.env.KV_URL) {
-      const { kv } = await import('@vercel/kv');
-      await kv.setex(key, ttlSeconds, JSON.stringify(value));
-      return;
+    const kv = await getKvClient();
+    if (kv) {
+      try {
+        await kv.setex(key, ttlSeconds, JSON.stringify(value));
+        return;
+      } catch (error) {
+        console.error('KV set error:', error);
+        // Fall through to memory cache
+      }
     }
-  } catch {
-    // Fallback to memory cache
+  } catch (error) {
+    console.error('Error getting KV client:', error);
   }
 
   // Fallback to memory cache
@@ -68,14 +100,17 @@ export async function setCached<T>(
  */
 export async function deleteCached(key: string): Promise<void> {
   try {
-    // Try Vercel KV first if available
-    if (process.env.KV_URL) {
-      const { kv } = await import('@vercel/kv');
-      await kv.del(key);
-      return;
+    const kv = await getKvClient();
+    if (kv) {
+      try {
+        await kv.del(key);
+        return;
+      } catch (error) {
+        console.error('KV delete error:', error);
+      }
     }
-  } catch {
-    // Fallback to memory cache
+  } catch (error) {
+    console.error('Error getting KV client:', error);
   }
 
   memoryCache.delete(key);
@@ -86,17 +121,21 @@ export async function deleteCached(key: string): Promise<void> {
  */
 export async function clearCachePattern(pattern: string): Promise<void> {
   try {
-    // Try Vercel KV first if available
-    if (process.env.KV_URL) {
-      const { kv } = await import('@vercel/kv');
-      const keys = await kv.keys(pattern);
-      if (keys.length > 0) {
-        await kv.del(...keys);
+    const kv = await getKvClient();
+    if (kv) {
+      try {
+        const keys = await kv.keys(pattern);
+        if (keys && keys.length > 0) {
+          await kv.del(...keys);
+          return;
+        }
+      } catch (error) {
+        console.error('KV keys/delete error:', error);
+        // Fall through to memory cache
       }
-      return;
     }
-  } catch {
-    // Fallback to memory cache
+  } catch (error) {
+    console.error('Error getting KV client:', error);
   }
 
   // Fallback to memory cache - simple pattern matching
