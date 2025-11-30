@@ -15,6 +15,7 @@ import { ReactionsPanel } from '@/components/ReactionsPanel';
 import { CommentsSection } from '@/components/CommentsSection';
 import { ShareButton } from '@/components/ShareButton';
 import { TagsManager } from '@/components/TagsManager';
+import { extractIdFromSlug } from '@/lib/slug';
 import type { AnimalProfile } from '@/types';
 
 export default function MemorialPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -24,20 +25,37 @@ export default function MemorialPage({ params }: { params: Promise<{ slug: strin
   const [loading, setLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
 
+  // Extract ID from slug
+  const getProfileId = () => {
+    const extractedId = extractIdFromSlug(slug);
+    return extractedId || slug;
+  };
+
   // Fetch profile from API by slug
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`/api/memorials/${slug}`);
+        const profileId = getProfileId();
+        const response = await fetch(`/api/profiles`);
         const result = await response.json();
         if (result.success && result.data) {
-          setProfile(result.data);
+          // Try to find by ID first
+          let found = result.data.find((p: AnimalProfile) => p.id === profileId);
+          
+          // If not found by ID, try by slug
+          if (!found) {
+            found = result.data.find((p: AnimalProfile) => p.slug === slug);
+          }
+          
+          if (found) {
+            setProfile(found);
 
-          // Increment view count
-          if (result.data.id) {
-            fetch(`/api/profiles/${result.data.id}/view`, { method: 'POST' }).catch(
+            // Increment view count
+            fetch(`/api/profiles/${found.id}/view`, { method: 'POST' }).catch(
               (err) => console.error('Error incrementing view count:', err)
             );
+          } else {
+            router.push('/404');
           }
         } else {
           router.push('/404');

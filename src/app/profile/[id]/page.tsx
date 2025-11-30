@@ -96,7 +96,8 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
   }
 
   // Calculate age at death
-  const calculateAge = (birthDate: string, deathDate: string) => {
+  const calculateAge = (birthDate: string | undefined, deathDate: string | undefined) => {
+    if (!birthDate || !deathDate) return 'años';
     const birth = new Date(birthDate);
     const death = new Date(deathDate);
     const years = death.getFullYear() - birth.getFullYear();
@@ -112,8 +113,8 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
   const visitsCount = 234; // Mock data
 
   // Calculate life timeline milestones
-  const birthYear = new Date(profile.birthDate).getFullYear();
-  const deathYear = new Date(profile.deathDate).getFullYear();
+  const birthYear = profile.birthDate ? new Date(profile.birthDate).getFullYear() : new Date().getFullYear() - 5;
+  const deathYear = profile.deathDate ? new Date(profile.deathDate).getFullYear() : new Date().getFullYear();
   const lifeYears = deathYear - birthYear;
 
   const timelineMilestones = [
@@ -188,7 +189,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
           {/* Badges */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6 px-4">
             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm md:text-base">
-              ⭐ {profile.birthDate.split('-')[0]} - {profile.deathDate.split('-')[0]}
+              ⭐ {profile.birthDate ? profile.birthDate.split('-')[0] : '?'} - {profile.deathDate ? profile.deathDate.split('-')[0] : '?'}
             </Badge>
             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm md:text-base">
               📍 {location}
@@ -200,7 +201,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
 
           {/* Epitaph */}
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 italic max-w-3xl mb-4 sm:mb-6 md:mb-8 font-serif px-6">
-            "{profile.epitaph}"
+            "{profile.epitaph || 'Siempre en nuestro corazón'}"
           </p>
 
           {/* Action buttons */}
@@ -298,7 +299,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
             <div className="mt-8 sm:mt-10 md:mt-12 text-center max-w-2xl mx-auto px-2">
               <div className="bg-gradient-to-r from-nature-50 via-sky-50 to-golden-50 rounded-2xl p-4 sm:p-5 md:p-6 border border-nature-200">
                 <p className="text-nature-700 leading-relaxed text-sm sm:text-base md:text-lg">
-                  <span className="font-bold text-nature-800">{profile.name}</span> compartió <span className="font-bold text-sky-700">{ageAtDeath}</span> de amor incondicional con su familia.
+                  <span className="font-bold text-nature-800">{profile.name || 'Esta mascota'}</span> compartió <span className="font-bold text-sky-700">{ageAtDeath}</span> de amor incondicional con su familia.
                   Desde el momento en que llegó en <span className="font-bold text-nature-700">{birthYear}</span> hasta su partida en <span className="font-bold text-golden-700">{deathYear}</span>,
                   cada día fue un regalo lleno de momentos especiales.
                 </p>
@@ -319,7 +320,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
             </CardHeader>
             <CardContent>
               <p className="text-nature-700 leading-relaxed whitespace-pre-wrap text-base sm:text-lg">
-                {profile.story}
+                {profile.story || 'Una mascota especial que siempre estará en nuestros corazones.'}
               </p>
             </CardContent>
           </Card>

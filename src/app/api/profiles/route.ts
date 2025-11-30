@@ -4,6 +4,7 @@ import { PlanPermissionsService } from '@/lib/planPermissions';
 import { NextRequest, NextResponse } from 'next/server';
 import { getCached, setCached, cacheKeys, getPaginationParams, calculatePagination } from '@/lib/cache';
 import { prisma } from '@/lib/prisma';
+import { generateSlug } from '@/lib/slug';
 
 export async function GET(req: NextRequest) {
   try {
@@ -84,6 +85,7 @@ export async function GET(req: NextRequest) {
       success: true,
       data: data.map((item: any) => ({
         ...item,
+        slug: generateSlug(item.name, item.id),
         deathDate: item.deathDate instanceof Date ? item.deathDate.toISOString() : item.deathDate,
         birthDate: item.birthDate instanceof Date ? item.birthDate.toISOString() : item.birthDate,
         latitude: Number(item.latitude) || 0,
