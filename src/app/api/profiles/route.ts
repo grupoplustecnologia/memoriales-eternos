@@ -56,6 +56,8 @@ export async function GET(req: NextRequest) {
           photoUrl: true,
           animalType: true,
           deathDate: true,
+          latitude: true,
+          longitude: true,
           viewCount: true,
           user: {
             select: { name: true },
@@ -80,6 +82,8 @@ export async function GET(req: NextRequest) {
       data: data.map((item: any) => ({
         ...item,
         deathDate: item.deathDate instanceof Date ? item.deathDate.toISOString() : item.deathDate,
+        latitude: Number(item.latitude) || 0,
+        longitude: Number(item.longitude) || 0,
       })),
       pagination: calculatePagination(page, limit, total),
     };
