@@ -57,11 +57,11 @@ export const createDynamicComponent = (
   importFn: () => Promise<any>,
   options?: {
     ssr?: boolean;
-    loading?: React.ComponentType;
+    loading?: () => React.ReactNode;
   }
 ) => {
   return dynamic(() => importFn(), {
-    loading: options?.loading || ComponentLoader,
+    loading: options?.loading || (() => <ComponentLoader />),
     ssr: options?.ssr ?? true
   });
 };
