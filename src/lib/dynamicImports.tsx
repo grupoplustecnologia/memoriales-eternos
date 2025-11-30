@@ -19,7 +19,7 @@ export const ComponentLoader = () => (
  * Lazy load InteractiveMap component
  * Reduces initial JS by ~20kB
  */
-export const DynamicInteractiveMap = dynamic(() => import('@/components/InteractiveMap'), {
+export const DynamicInteractiveMap = dynamic(() => import('@/components/InteractiveMap').then(mod => ({ default: mod.InteractiveMap })), {
   loading: () => <ComponentLoader />,
   ssr: false
 });
