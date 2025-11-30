@@ -816,3 +816,53 @@ export const generateSocialMetaTags = (platform: 'facebook' | 'twitter' | 'linke
       return {};
   }
 };
+
+/**
+ * Get canonical URL for a given path
+ */
+export const getCanonicalUrl = (path: string): string => {
+  const baseUrl = 'https://memorias-eternas.app';
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  return `${baseUrl}${cleanPath}`;
+};
+
+/**
+ * Get dynamic Open Graph image URL
+ * Generates unique gradient-based images per page
+ */
+export const getOgImageUrl = (pageSlug: string, pageType: string = 'memorial'): string => {
+  const baseUrl = 'https://memorias-eternas.app';
+  // Generate deterministic colors based on slug hash
+  const hash = Array.from(pageSlug).reduce((acc, char) => {
+    return ((acc << 5) - acc) + char.charCodeAt(0);
+  }, 0);
+  
+  const hue = Math.abs(hash % 360);
+  const colors = {
+    primary: `hsl(${hue}, 70%, 50%)`,
+    secondary: `hsl(${(hue + 60) % 360}, 70%, 50%)`
+  };
+
+  // Return encoded URL for dynamic image generation (can use Vercel OG or similar)
+  const params = new URLSearchParams({
+    title: pageSlug.replace(/-/g, ' '),
+    type: pageType,
+    color: colors.primary
+  });
+  
+  return `${baseUrl}/api/og?${params.toString()}`;
+};
+
+/**
+ * Generate canonical and OG URLs for a landing page
+ */
+export const generateLandingPageUrls = (pageSlug: string) => {
+  const canonical = getCanonicalUrl(`/${pageSlug}`);
+  const ogImage = getOgImageUrl(pageSlug, 'landing');
+  
+  return {
+    canonical,
+    ogImage,
+    ogUrl: canonical
+  };
+};

@@ -4,10 +4,71 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { SchemaHead } from '@/components/SchemaHead';
+import { CanonicalHead } from '@/components/CanonicalHead';
+import {
+  generateLocalBusinessSchema,
+  generateBreadcrumbSchema,
+  generateFAQSchema,
+  generateWebPageSchema
+} from '@/lib/schema';
+import { getCanonicalUrl, getOgImageUrl } from '@/lib/seo';
+
+// Page schemas
+const pageSlug = 'cementerio-virtual-mascotas';
+const canonical = getCanonicalUrl(`/${pageSlug}`);
+const ogImage = getOgImageUrl(pageSlug, 'landing');
+
+const breadcrumbs = [
+  { name: 'Home', url: 'https://memorias-eternas.app' },
+  { name: 'Cementerio Virtual', url: canonical },
+  { name: 'Mascotas', url: canonical }
+];
+
+const faqs = [
+  {
+    question: '¿Qué es un cementerio virtual para mascotas?',
+    answer: 'Un espacio digital permanente donde puedes crear memorials para honrar a tu mascota fallecida. Es un lugar para compartir fotos, historias y recibir tributos.'
+  },
+  {
+    question: '¿Puedo crear un memorial para cualquier mascota?',
+    answer: 'Sí, para cualquier mascota: perros, gatos, pájaros, reptiles, roedores. Todas las mascotas que fueron parte de tu familia son bienvenidas.'
+  },
+  {
+    question: '¿Es gratis crear un memorial?',
+    answer: 'Sí, puedes crear tu primer memorial de forma completamente gratuita. Los planes premium ofrecen más features y espacio ilimitado.'
+  },
+  {
+    question: '¿Puedo compartir el memorial con otros?',
+    answer: 'Absolutamente. Cada memorial tiene un enlace único que puedes compartir con familia, amigos y comunidad en redes sociales.'
+  },
+  {
+    question: '¿Los datos de mi mascota están seguros?',
+    answer: 'Sí, utilizamos encriptación de nivel empresarial. Tienes control total sobre la privacidad de tu memorial.'
+  },
+  {
+    question: '¿Puedo editar el memorial después de crearlo?',
+    answer: 'Sí, en cualquier momento. Puedes agregar fotos, actualizar la historia, cambiar información y más.'
+  }
+];
 
 export default function CementerioVirtualMascotas() {
+  const localBusinessSchema = generateLocalBusinessSchema('Cementerio Virtual Global');
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+  const faqSchema = generateFAQSchema(faqs);
+  const webPageSchema = generateWebPageSchema(
+    'Cementerio Virtual para Mascotas - Forever Pet Friend',
+    'Crea un hermoso memorial virtual para tu mascota. Un lugar permanente para honrar su memoria y compartir su historia.',
+    canonical,
+    ogImage
+  );
+
   return (
     <div className="min-h-screen">
+      {/* Add Canonical and Schemas to head */}
+      <CanonicalHead url={canonical} />
+      <SchemaHead schemas={[localBusinessSchema, breadcrumbSchema, faqSchema, webPageSchema]} />
+
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
