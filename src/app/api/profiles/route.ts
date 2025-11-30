@@ -55,12 +55,15 @@ export async function GET(req: NextRequest) {
           name: true,
           photoUrl: true,
           animalType: true,
+          breed: true,
           deathDate: true,
+          birthDate: true,
+          epitaph: true,
           latitude: true,
           longitude: true,
           viewCount: true,
           user: {
-            select: { name: true },
+            select: { name: true, subscriptionTier: true },
           },
           _count: {
             select: {
@@ -82,8 +85,11 @@ export async function GET(req: NextRequest) {
       data: data.map((item: any) => ({
         ...item,
         deathDate: item.deathDate instanceof Date ? item.deathDate.toISOString() : item.deathDate,
+        birthDate: item.birthDate instanceof Date ? item.birthDate.toISOString() : item.birthDate,
         latitude: Number(item.latitude) || 0,
         longitude: Number(item.longitude) || 0,
+        userSubscriptionTier: item.user?.subscriptionTier || 'free',
+        userName: item.user?.name || 'Anónimo',
       })),
       pagination: calculatePagination(page, limit, total),
     };
