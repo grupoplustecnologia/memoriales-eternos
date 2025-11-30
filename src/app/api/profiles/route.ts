@@ -13,7 +13,25 @@ export async function GET(req: NextRequest) {
     const pageParam = url.searchParams.get('page');
     const limitParam = url.searchParams.get('limit');
 
-    const { page, limit } = getPaginationParams(pageParam || '1', limitParam || '50');
+    // Default pagination if not specified
+    const page = pageParam ? parseInt(pageParam) : 1;
+    const limit = limitParam ? parseInt(limitParam) : 50;
+
+    // Validate pagination parameters
+    if (isNaN(page) || page < 1) {
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid page number'
+      }, { status: 400 });
+    }
+
+    if (isNaN(limit) || limit < 1 || limit > 100) {
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid limit'
+      }, { status: 400 });
+    }
+
     const cacheKey = publicOnly ? `${cacheKeys.profiles(page, limit)}:public` : cacheKeys.profiles(page, limit);
 
     // Try cache first
