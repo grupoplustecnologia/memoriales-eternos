@@ -3,10 +3,29 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { SchemaHead } from '@/components/SchemaHead';
+import { CanonicalHead } from '@/components/CanonicalHead';
+import { generateLocalBusinessSchema, generateBreadcrumbSchema, generateFAQSchema, generateWebPageSchema } from '@/lib/schema';
+import { getCanonicalUrl, getOgImageUrl } from '@/lib/seo';
+
+
+const pageSlug = 'cementerio-virtual-mascotas-zaragoza';
+const canonical = getCanonicalUrl(`/${pageSlug}`);
+const ogImage = getOgImageUrl(pageSlug, 'landing');
+
+const breadcrumbs = [{ name: 'Home', url: 'https://memorias-eternas.app' }, { name: 'Cementerio Virtual Mascotas Zaragoza', url: canonical }];
+const faqs = [{ question: '¿Puedo crear un memorial?', answer: 'Sí, completamente.' }, { question: '¿Es gratis?', answer: 'Sí.' }, { question: '¿Puedo compartir?', answer: 'Sí.' }];
 
 export default function CementerioVirtualMascotasZaragoza() {
+  const localBusinessSchema = generateLocalBusinessSchema('Cementerio Virtual Mascotas Zaragoza');
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+  const faqSchema = generateFAQSchema(faqs);
+  const webPageSchema = generateWebPageSchema('Cementerio Virtual Mascotas Zaragoza - Forever Pet Friend', 'Memorial para mascotas.', canonical, ogImage);
+
   return (
     <div className="min-h-screen bg-white">
+      <CanonicalHead url={canonical} />
+      <SchemaHead schemas={[localBusinessSchema, breadcrumbSchema, faqSchema, webPageSchema]} />
       <div className="relative h-[500px] bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 overflow-hidden">
         <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url('https://images.unsplash.com/photo-1587300411107-ec5ff141dd51?w=1200&q=80')`, backgroundSize: 'cover', backgroundPosition: 'center'}} />
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-900/80 via-purple-900/80 to-pink-900/80" />

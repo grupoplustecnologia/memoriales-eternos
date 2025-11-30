@@ -3,9 +3,27 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { SchemaHead } from '@/components/SchemaHead';
+import { CanonicalHead } from '@/components/CanonicalHead';
+import { generateLocalBusinessSchema, generateBreadcrumbSchema, generateFAQSchema, generateWebPageSchema } from '@/lib/schema';
+import { getCanonicalUrl, getOgImageUrl } from '@/lib/seo';
+
+const pageSlug = 'memorial-tortugas-online';
+const canonical = getCanonicalUrl(`/${pageSlug}`);
+const ogImage = getOgImageUrl(pageSlug, 'landing');
+
+const breadcrumbs = [{ name: 'Home', url: 'https://memorias-eternas.app' }, { name: 'Memorial Tortugas', url: canonical }];
+const faqs = [{ question: '¿Puedo crear un memorial?', answer: 'Sí, para todas tus mascotas.' }, { question: '¿Es gratis?', answer: 'Sí.' }, { question: '¿Puedo compartir?', answer: 'Sí.' }];
+
 export default function MemorialTortugasOnline() {
+  const localBusinessSchema = generateLocalBusinessSchema('Memorial Tortugas Online');
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+  const faqSchema = generateFAQSchema(faqs);
+  const webPageSchema = generateWebPageSchema('Memorial Tortugas Online - Forever Pet Friend', 'Memorial para tortugas.', canonical, ogImage);
   return (
     <div className="min-h-screen">
+      <CanonicalHead url={canonical} />
+      <SchemaHead schemas={[localBusinessSchema, breadcrumbSchema, faqSchema, webPageSchema]} />
       <section className="relative min-h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1544145945-f90425fb75a7?q=80&w=2000)',}} />
