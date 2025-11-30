@@ -12,24 +12,29 @@ const memoryCache = new Map<string, { data: unknown; expires: number }>();
 // Lazy load Vercel KV
 let kvClient: any = null;
 let kvInitialized = false;
+let kvAvailable = false;
 
 async function getKvClient() {
   if (kvInitialized) return kvClient;
   
-  if (process.env.KV_URL) {
+  kvInitialized = true;
+  
+  // Only try KV if we're in production and have the URL
+  if (process.env.NODE_ENV === 'production' && process.env.KV_URL) {
     try {
       const { kv } = await import('@vercel/kv');
       kvClient = kv;
-      kvInitialized = true;
+      kvAvailable = true;
+      console.log('KV client initialized successfully');
       return kvClient;
     } catch (error) {
-      console.error('Failed to initialize KV:', error);
-      kvInitialized = true; // Mark as initialized to avoid retrying
+      console.warn('Failed to initialize KV client, using memory cache:', error instanceof Error ? error.message : String(error));
+      kvAvailable = false;
       return null;
     }
   }
   
-  kvInitialized = true;
+  kvAvailable = false;
   return null;
 }
 
