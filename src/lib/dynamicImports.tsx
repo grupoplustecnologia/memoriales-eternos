@@ -28,7 +28,7 @@ export const DynamicInteractiveMap = dynamic(() => import('@/components/Interact
  * Lazy load MapboxMap component
  * Only needed on map pages, reduces initial bundle
  */
-export const DynamicMapboxMap = dynamic(() => import('@/components/MapboxMap').then(mod => ({ default: mod.MapboxMap })), {
+export const DynamicMapboxMap = dynamic(() => import('@/components/MapboxMap'), {
   loading: () => <ComponentLoader />,
   ssr: false
 });
