@@ -399,6 +399,7 @@ export default function MemorialPage({ params }: { params: Promise<{ slug: strin
             story={profile.story}
             photoUrl={profile.photoUrl}
             animalType={profile.animalType}
+            slug={profile.slug || slug}
           />
         </div>
       </div>

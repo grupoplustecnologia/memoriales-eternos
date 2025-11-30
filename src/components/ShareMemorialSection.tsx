@@ -9,9 +9,10 @@ import { Input } from '@/components/ui/input';
 interface ShareMemorialSectionProps {
   memorialId: string;
   memorialName: string;
-  story: string;
-  photoUrl: string;
+  story?: string;
+  photoUrl?: string;
   animalType: string;
+  slug?: string;
 }
 
 interface ShareOption {
@@ -81,15 +82,19 @@ const SHARE_OPTIONS: ShareOption[] = [
   }
 ];
 
-export default function ShareMemorialSection({ memorialId, memorialName, story, photoUrl, animalType }: ShareMemorialSectionProps) {
+export default function ShareMemorialSection({ memorialId, memorialName, story = '', photoUrl = '', animalType, slug }: ShareMemorialSectionProps) {
   const [showEmailTemplate, setShowEmailTemplate] = useState(false);
   const [emailTo, setEmailTo] = useState('');
 
-  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://forever-pet-friend.app';
-  const memorialUrl = `${baseUrl}/profile/${memorialId}`;
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://foreverpetfriend.com';
+  // Use slug for SEO-friendly URLs, fall back to ID if no slug
+  const memorialUrl = slug 
+    ? `${baseUrl}/memorial/${slug}`
+    : `${baseUrl}/memorial/${memorialId}`;
 
   const generateShareMessage = () => {
-    return `Visita el memorial de ${memorialName} en Forever Pet Friend. ${story.substring(0, 100)}...`;
+    const storyPreview = story ? story.substring(0, 100) : 'Un memorial especial';
+    return `Visita el memorial de ${memorialName} en Forever Pet Friend. ${storyPreview}...`;
   };
 
   const shareMessage = generateShareMessage();
@@ -211,7 +216,7 @@ export default function ShareMemorialSection({ memorialId, memorialName, story, 
               <p className="text-xs font-semibold text-red-900 mb-2">Preview del email:</p>
               <div className="bg-white p-3 rounded text-xs text-gray-700 max-h-32 overflow-y-auto">
                 <p className="font-bold mb-2">Memorial de {memorialName} - Forever Pet Friend</p>
-                <p className="mb-2">{story.substring(0, 150)}...</p>
+                <p className="mb-2">{story ? story.substring(0, 150) : 'Un memorial especial'}...</p>
                 <p className="text-blue-600">{memorialUrl}</p>
               </div>
             </div>

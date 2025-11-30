@@ -402,6 +402,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
             story={profile.story}
             photoUrl={profile.photoUrl}
             animalType={profile.animalType}
+            slug={profile.slug}
           />
         </div>
       </div>
